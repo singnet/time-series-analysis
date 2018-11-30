@@ -9,7 +9,7 @@ import threading
 from service import registry
 
 logging.basicConfig(level=10, format="%(asctime)s - [%(levelname)8s] - %(name)s - %(message)s")
-log = logging.getLogger("run_stock_prediction_service")
+log = logging.getLogger("next_day_trend_service")
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
     root_path = pathlib.Path(__file__).absolute().parent
 
     # All services modules go here
-    service_modules = ["service.stock_prediction_service"]
+    service_modules = ["service.next_day_trend_service"]
 
     # Removing all previous snetd .db file
     os.system("rm snetd*.db")

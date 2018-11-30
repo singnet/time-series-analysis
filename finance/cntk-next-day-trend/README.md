@@ -102,7 +102,7 @@ Inputs:
 Local (testing purpose):
 
 ```
-$ python3 test_stock_prediction_service.py 
+$ python3 test_next_day_trend_service.py 
 Endpoint (localhost:7003): 
 Method (trend): 
 Source(yahoo): 
