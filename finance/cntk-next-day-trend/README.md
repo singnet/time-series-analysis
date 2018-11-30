@@ -94,8 +94,8 @@ $ python3 run_next_day_trend_service.py
 Inputs:
   - `source`: Source to get market data (ie. yahoo, check this [link](https://github.com/pydata/pandas-datareader/blob/master/pandas_datareader/data.py#L306)).
   - `contract`: Label of asset (like "SPY", check this [link](https://finance.yahoo.com/most-active)).
-  - `start_date`: Start date of training dataset (format "YYYY-MM-DD").
-  - `end_date`: End date of training dataset (format "YYYY-MM-DD").
+  - `start`: Start date of training dataset (format "YYYY-MM-DD").
+  - `end`: End date of training dataset (format "YYYY-MM-DD").
   - `target_date`: Date that will be analysed (format "YYYY-MM-DD").
   - The date delta must be >= 100 days.
 
@@ -119,7 +119,7 @@ to learn how to publish a service and open a payment channel to be able to call 
 Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
-$ snet client call 0 0.00000001 54.203.198.53:7009 trend '{"source": "yahoo", "contract": "AAPL", "start_date": "2018-01-01", "end_date": "2018-10-31", "target_date": "2018-11-28"}'
+$ snet client call 0 0.00000001 54.203.198.53:7009 trend '{"source": "yahoo", "contract": "AAPL", "start": "2018-01-01", "end": "2018-10-31", "target_date": "2018-11-28"}'
 ...
 Read call params from cmdline...
 

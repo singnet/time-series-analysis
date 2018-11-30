@@ -29,8 +29,8 @@ The user must provide the following inputs in order to start the service and get
 Inputs:
   - `source`: Source to get market data (ie. yahoo, check this [link](https://github.com/pydata/pandas-datareader/blob/master/pandas_datareader/data.py#L306)).
   - `contract`: Label of asset (like "SPY").
-  - `start_date`: Start date of training dataset.
-  - `end_date`: End date of training dataset.
+  - `start`: Start date of training dataset.
+  - `end`: End date of training dataset.
   - `target_date`: Date that will be analysed.
   - The date delta must be >= 100 days.
 
@@ -41,7 +41,7 @@ You can also call the service from SingularityNET CLI (`snet`).
 Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
-$ snet client call 0 0.00000001 54.203.198.53:7009 trend '{"source": "yahoo", "contract": "SPY", "start_date": "2017-01-01", "end_date": "2017-10-31", "target_date": "2018-11-28"}'
+$ snet client call 0 0.00000001 54.203.198.53:7009 trend '{"source": "yahoo", "contract": "SPY", "start": "2017-01-01", "end": "2017-10-31", "target_date": "2018-11-28"}'
 ...
 Read call params from cmdline...
 
@@ -57,8 +57,8 @@ Input:
 
   - `source`: yahoo
   - `contract`: VALE
-  - `start_date`: 2010-01-01
-  - `end_date`: 2018-08-16
+  - `start`: 2010-01-01
+  - `end`: 2018-08-16
   - `target_date`: 2018-09-17
 
 Response:
@@ -73,8 +73,8 @@ Input :
 
   - `source`: yahoo
   - `contract`: VALE
-  - `start_date`: 2010-01-01
-  - `end_date`: 2018-08-16
+  - `start`: 2010-01-01
+  - `end`: 2018-08-16
   - `target_date`: 2018-10-02
 
 Response:
