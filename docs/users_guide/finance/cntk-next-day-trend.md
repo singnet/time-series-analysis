@@ -12,27 +12,46 @@ It is part of our [Time Series Analysis Services](https://github.com/singnet/tim
 
 ### Welcome
 
-The service receives as input the name of an asset contract (from financial market), a date interval to train the model and a 
-target date to analyze. After the training it uses the model to output a market trend ("UP" or "DOWN")
- and its confidence for the next date.
+The service receives as input the symbol of an asset contract (and the source to
+get its market data), a date interval to train the model and a target date to
+analyze. After training a model in the given period, the service outputs a
+market trend ("UP" or "DOWN") for the target date.
 
 ### What’s the point?
 
-The service receives a time series (market data) that is used to train a MultiLayer Perceptron (MLP) to analyze a trend.
+A MultiLayer Perceptron (MLP) is trained on the closing data of the given time
+series in a given period of time. The assumption here is that such period is
+somehow similar (regarding the overall behavior of the target asset) to the
+time period just before the target date.
 
-The service outputs a market trend and its confidence.
+If this premise is correct, the trained model can make a sensible estimate for
+the asset UP/DOWN trending in the target date.
+
+The service uses a limited set of sources for market data, as detailed below.
+No intraday data is used. Actually, the model is trained only with "close"
+prices so its outputs should be interpreted as the trend of the target asset
+close price in the target date be greater/lower than the previous close.
 
 ### How does it work?
 
-The user must provide the following inputs in order to start the service and get a response:
+The user must provide the following inputs:
 
-Inputs:
-  - `source`: Source to get market data (ie. yahoo, check this [link](https://github.com/pydata/pandas-datareader/blob/master/pandas_datareader/data.py#L306)).
-  - `contract`: Label of asset (like "SPY").
-  - `start`: Start date of training dataset.
-  - `end`: End date of training dataset.
-  - `target_date`: Date that will be analysed.
-  - The date delta must be >= 100 days.
+  - `source`: Source to get market data (ie. "yahoo", "google", etc.)
+  - `contract`: Asset's market symbol (e.g. "SPY", "AMZN", etc).
+  - `start`: Start date of training dataset (format "YYYY-MM-DD").
+  - `end`: End date of training dataset (format "YYYY-MM-DD"). **Important:** the training period must be greater than 100 days.
+  - `target_date`: Date that will be analised (format "YYYY-MM-DD").
+
+The following tags are available for `source`: "yahoo", "google", "iex", "iex-tops",
+"iex-last", "iex-last", "bankofcanada", "stooq", "iex-book", "enigma", "fred",
+"famafrench", "oecd", "eurostat", "nasdaq", "quandl", "moex", "morningstar",
+'robinhood', "tiingo", "yahoo-actions", "yahoo-dividends", "av-forex",
+"av-daily", "av-daily-adjusted", "av-weekly", "av-weekly-adjusted",
+"av-monthly", "av-monthly-adjusted".
+See [here](https://pandas-datareader.readthedocs.io/en/latest/remote_data.html#remote-data-wb) 
+for a reference of which data source each tag is related to.
+
+`contract` is supposed to be a valid symbol in the given `source`.
 
 You can use this service from [SingularityNET DApp](http://alpha.singularitynet.io/), clicking on `SNET/ImageRecon`.
 
@@ -51,6 +70,14 @@ Calling service...
         {'DOWN': 0.54}
 ```
 
+The output format is `{signal: confidence}`, where:
+
+  - `signal`: is either `UP` or `DOWN`
+  - `confidence`: is a number in `[0.5, 1]`. It's a measure of how reliable is
+    the signaled trend. **Important:** `confidence` is not a model's estimate of
+    how much the target asset's price will raise or fall. `confidence` values 
+    near 0.5 indicates that the model could not detect neither UP or DOWN trends.
+
 ### What to expect from this service?
 
 Input:
@@ -67,8 +94,6 @@ Response:
 {'UP': 0.53}
 ```
 
-![chart_vale_1](../../assets/users_guide/chart_1.png 'Chart_VALE')
-
 Input :
 
   - `source`: yahoo
@@ -82,5 +107,3 @@ Response:
 ```
 {'UP': 0.55}
 ```
-
-![chart_vale_2](../../assets/users_guide/chart_2.png 'Chart_VALE_2')
