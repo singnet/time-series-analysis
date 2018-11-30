@@ -2,8 +2,8 @@ import sys
 import grpc
 
 # import the generated classes
-from service.service_spec import stock_prediction_pb2_grpc as grpc_bt_grpc
-from service.service_spec import stock_prediction_pb2 as grpc_bt_pb2
+from service.service_spec import next_day_trend_pb2_grpc as grpc_bt_grpc
+from service.service_spec import next_day_trend_pb2 as grpc_bt_pb2
 
 from service import registry
 
@@ -15,7 +15,7 @@ if __name__ == "__main__":
             if sys.argv[1] == "test":
                 test_flag = True
 
-        endpoint = input("Endpoint (localhost:{}): ".format(registry["next_day_trend_service"]["grpc"]))
+        endpoint = input("Endpoint (localhost:{}): ".format(registry["next_day_trend_service"]["grpc"])) if not test_flag else ""
         if endpoint == "":
             endpoint = "localhost:{}".format(registry["next_day_trend_service"]["grpc"])
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         if target_date == "":
             target_date = "2018-11-12"
 
-        if grpc_method == "predict":
+        if grpc_method == "trend":
             stub = grpc_bt_grpc.NextDayTrendStub(channel)
             grpc_input = grpc_bt_pb2.Input(source=source,
                                            contract=contract,
@@ -57,6 +57,8 @@ if __name__ == "__main__":
             print(grpc_output.response)
         else:
             print("Invalid method!")
+            exit(1)
 
     except Exception as e:
         print(e)
+        exit(1)

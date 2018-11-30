@@ -3,7 +3,7 @@ FROM microsoft/cntk:latest
 ENV SINGNET_REPOS=/opt/singnet
 ENV TS_REPO_NAME=time-series-analysis
 ENV FINANCE_FOLDER=${SINGNET_REPOS}/${TS_REPO_NAME}/finance
-ENV SERVICE_NAME=next-day-trend
+ENV SERVICE_NAME=cntk-next-day-trend
 ENV SNETD_PORT=7009
 ENV SNETD_CONFIG=snetd.config.json
 
@@ -47,7 +47,7 @@ RUN wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz && \
 RUN cd ${SINGNET_REPOS} && \
     git clone https://github.com/singnet/snet-cli && \
     cd snet-cli && \
-    cat ./scripts/blockchain | sed "s/python3/python3.6/g" > ./scripts/blockchain && \
+    cat ./scripts/blockchain | sed "s/python3 /python3.6 /g" > ./scripts/blockchain && \
     ./scripts/blockchain install && \
     pip3.6 install -e .
 # ======================================================================================================================
@@ -60,9 +60,7 @@ RUN cd ${SINGNET_REPOS} && \
     cp snetd-0.1.2/snetd-linux-amd64 /usr/local/bin/snetd
 
 RUN cd ${SINGNET_REPOS} && \
-    git clone https://github.com/singnet/${TS_REPO_NAME}.git && \
-    cd ${TS_REPO_NAME}/utils && \
-    ./get_cntk_models.sh
+    git clone https://github.com/singnet/${TS_REPO_NAME}.git
 
 RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
     sh -c "echo '{ \"PRIVATE_KEY\": \"1000000000000000000000000000000000000000000000000000000000000000\", \

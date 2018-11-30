@@ -2,42 +2,42 @@ version: 2
 jobs:
   deploy-cntk-next-day-trend:
     docker:
-    - image: circleci/python:3.6.6-node
+      - image: circleci/python:3.6.6-node
     working_directory: ~/singnet
     environment:
       SERVICE_NAME: cntk-next-day-trend
-      SERVICE_RUN_SCRIPT: run_next-day-trend_service.py
-      SERVICE_TEST_SCRIPT: test_next-day-trend_service.py
+      SERVICE_RUN_SCRIPT: run_next_day_trend_service.py
+      SERVICE_TEST_SCRIPT: test_next_day_trend_service.py
       SNETD_PORT: 7009
     steps:
-    - run:
-        name: Deploy Over SSH
-        command: |
-          ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-            nvidia-docker stop $DOCKER_CONTAINER_NAME_CNTK_TSNDT || true && nvidia-docker rename $DOCKER_CONTAINER_NAME_CNTK_TSNDT ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true
-            nvidia-docker build \
-              -t $DOCKER_IMAGE_NAME_CNTK_TSNDT https://github.com/singnet/dnn-model-services.git#master:/Services/gRPC/$SERVICE_NAME
-            nvidia-docker run --runtime=nvidia \
-              --name $DOCKER_CONTAINER_NAME_CNTK_TSNDT \
-              --restart unless-stopped \
-              -p $SNETD_PORT:$SNETD_PORT \
-              -di $DOCKER_IMAGE_NAME_CNTK_TSNDT sh -c "git pull;python3 $SERVICE_RUN_SCRIPT"
-          EOF
-    - run:
-        name: Remove Old Docker Container
-        command: |
-          ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-            nvidia-docker stop ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true && nvidia-docker rm ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true
-          EOF
-    - run:
-        name: Test local
-        command: |
-          ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-            nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSNDT python3 $SERVICE_TEST_SCRIPT test
-          EOF
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
+              nvidia-docker stop $DOCKER_CONTAINER_NAME_CNTK_TSNDT || true && nvidia-docker rename $DOCKER_CONTAINER_NAME_CNTK_TSNDT ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true
+              nvidia-docker build \
+                -t $DOCKER_IMAGE_NAME_CNTK_TSNDT https://github.com/singnet/time-series-analysis.git#master:/finance/$SERVICE_NAME
+              nvidia-docker run --runtime=nvidia \
+                --name $DOCKER_CONTAINER_NAME_CNTK_TSNDT \
+                --restart unless-stopped \
+                -p $SNETD_PORT:$SNETD_PORT \
+                -di $DOCKER_IMAGE_NAME_CNTK_TSNDT sh -c "git pull;python3 $SERVICE_RUN_SCRIPT"
+            EOF
+      - run:
+          name: Remove Old Docker Container
+          command: |
+            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
+              nvidia-docker stop ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true && nvidia-docker rm ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true
+            EOF
+      - run:
+          name: Test local
+          command: |
+            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
+              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSNDT python3 $SERVICE_TEST_SCRIPT test
+            EOF
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - deploy-cntk-next-day-tren
+      - deploy-cntk-next-day-trend
