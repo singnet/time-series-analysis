@@ -38,9 +38,9 @@ The user must provide the following inputs:
 
   - `source`: Source to get market data (ie. "yahoo", "google", etc.)
   - `contract`: Asset's market symbol (e.g. "SPY", "AMZN", etc).
-  - `start_date`: Start of training dataset.
-  - `end_date`: End of training dataset. **Important:** the training period must be greater than 100 days.
-  - `target_date`: Date that will be analysed.
+  - `start`: Start date of training dataset (format "YYYY-MM-DD").
+  - `end`: End date of training dataset (format "YYYY-MM-DD"). **Important:** the training period must be greater than 100 days.
+  - `target_date`: Date that will be analised (format "YYYY-MM-DD").
 
 The following tags are available for `source`: "yahoo", "google", "iex", "iex-tops",
 "iex-last", "iex-last", "bankofcanada", "stooq", "iex-book", "enigma", "fred",
@@ -51,7 +51,7 @@ The following tags are available for `source`: "yahoo", "google", "iex", "iex-to
 See [here](https://pandas-datareader.readthedocs.io/en/latest/remote_data.html#remote-data-wb) 
 for a reference of which data source each tag is related to.
 
-`contract` is supposed to be a valis symbol in the given `source`.
+`contract` is supposed to be a valid symbol in the given `source`.
 
 You can use this service from [SingularityNET DApp](http://alpha.singularitynet.io/), clicking on `SNET/ImageRecon`.
 
