@@ -2,9 +2,9 @@ FROM microsoft/cntk:latest
 
 ENV SINGNET_REPOS=/opt/singnet
 ENV TS_REPO_NAME=time-series-analysis
-ENV FINANCE_FOLDER=${SINGNET_REPOS}/${TS_REPO_NAME}/finance
-ENV SERVICE_NAME=cntk-next-day-trend
-ENV SNETD_PORT=7070
+ENV GENERIC_FOLDER=${SINGNET_REPOS}/${TS_REPO_NAME}/generic
+ENV SERVICE_NAME=cntk-lstm-forecast
+ENV SNETD_PORT=7071
 ENV SNETD_CONFIG=snetd.config.json
 
 RUN mkdir -p ${SINGNET_REPOS}
@@ -62,7 +62,7 @@ RUN cd ${SINGNET_REPOS} && \
 RUN cd ${SINGNET_REPOS} && \
     git clone https://github.com/singnet/${TS_REPO_NAME}.git
 
-RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
+RUN cd ${GENERIC_FOLDER}/${SERVICE_NAME} && \
     sh -c "echo '{ \"DAEMON_END_POINT\": \"http://54.203.198.53:${SNETD_PORT}\", \
                    \"ETHEREUM_JSON_RPC_ENDPOINT\": \"https://kovan.infura.io\", \
                    \"IPFS_END_POINT\": \"http://ipfs.singularitynet.io:80\", \
@@ -79,8 +79,8 @@ RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
                    } \
                 }'" > ${SNETD_CONFIG}
 
-RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
+RUN cd ${GENERIC_FOLDER}/${SERVICE_NAME} && \
     pip3 install -r requirements.txt && \
     sh buildproto.sh
 
-WORKDIR ${FINANCE_FOLDER}/${SERVICE_NAME}
+WORKDIR ${GENERIC_FOLDER}/${SERVICE_NAME}
