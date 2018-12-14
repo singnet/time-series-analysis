@@ -8,7 +8,7 @@ jobs:
       SERVICE_NAME: cntk-next-day-trend
       SERVICE_RUN_SCRIPT: run_next_day_trend_service.py
       SERVICE_TEST_SCRIPT: test_next_day_trend_service.py
-      SNETD_PORT: 7009
+      SNETD_PORT: 7070
     steps:
       - run:
           name: Deploy Over SSH
@@ -33,7 +33,42 @@ jobs:
           name: Test local
           command: |
             ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSNDT python3 $SERVICE_TEST_SCRIPT test
+              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSNDT python3 $SERVICE_TEST_SCRIPT auto
+            EOF
+  deploy-cntk-lstm-forecast:
+    docker:
+      - image: circleci/python:3.6.6-node
+    working_directory: ~/singnet
+    environment:
+      SERVICE_NAME: cntk-lstm-forecast
+      SERVICE_RUN_SCRIPT: run_time_series_forecast_service.py
+      SERVICE_TEST_SCRIPT: test_time_series_forecast_service.py
+      SNETD_PORT: 7071
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
+              nvidia-docker stop $DOCKER_CONTAINER_NAME_CNTK_TSF || true && nvidia-docker rename $DOCKER_CONTAINER_NAME_CNTK_TSF ${DOCKER_CONTAINER_NAME_CNTK_TSF}_old || true
+              nvidia-docker build \
+                -t $DOCKER_IMAGE_NAME_CNTK_TSF https://github.com/singnet/time-series-analysis.git#master:/generic/$SERVICE_NAME
+              nvidia-docker run --runtime=nvidia \
+                --name $DOCKER_CONTAINER_NAME_CNTK_TSF \
+                --restart unless-stopped \
+                -p $SNETD_PORT:$SNETD_PORT \
+                -di $DOCKER_IMAGE_NAME_CNTK_TSF sh -c "git pull;python3 $SERVICE_RUN_SCRIPT"
+            EOF
+      - run:
+          name: Remove Old Docker Container
+          command: |
+            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
+              nvidia-docker stop ${DOCKER_CONTAINER_NAME_CNTK_TSF}_old || true && nvidia-docker rm ${DOCKER_CONTAINER_NAME_CNTK_TSF}_old || true
+            EOF
+      - run:
+          name: Test local
+          command: |
+            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
+              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSF python3 $SERVICE_TEST_SCRIPT auto
             EOF
 
 workflows:
@@ -41,3 +76,4 @@ workflows:
   build-and-deploy:
     jobs:
       - deploy-cntk-next-day-trend
+      - deploy-cntk-lstm-forecast

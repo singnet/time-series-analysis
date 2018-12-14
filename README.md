@@ -7,14 +7,18 @@
 
 # Time Series Analysis Services
 
-A collection of services using time series analysis.
+A collection of services for time series analysis.
 
 [HTML User's Guide Hub](https://singnet.github.io/time-series-analysis/)
-
 
 ## Getting Started
 
 For more details on how to publish and test a service, select it from the list below:
+
+### Generic:
+- [cntk-lstm-forecast](generic/cntk-lstm-forecast) ([User's Guide](docs/users_guide/generic/cntk-lstm-forecast.md)) - 
+This service uses a CNTK LSTM model and [Python SAX](https://github.com/seninp/saxpy) to extrapolate a given time series.
+[[Reference](https://cntk.ai/pythondocs/CNTK_106B_LSTM_Timeseries_with_IOT_Data.html)]
 
 ### Finance:
 - [cntk-next-day-trend](finance/cntk-next-day-trend) ([User's Guide](docs/users_guide/finance/cntk-next-day-trend.md)) - 
@@ -37,4 +41,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Each service is licensed as followed:
 
+- cntk-lstm-forecast - [MIT License](https://github.com/Microsoft/CNTK/blob/master/LICENSE.md)
 - cntk-next-day-trend - [MIT License](https://github.com/Microsoft/CNTK/blob/master/LICENSE.md)
