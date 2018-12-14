@@ -80,7 +80,7 @@ RUN cd ${GENERIC_FOLDER}/${SERVICE_NAME} && \
                 }'" > ${SNETD_CONFIG}
 
 RUN cd ${GENERIC_FOLDER}/${SERVICE_NAME} && \
-    pip install -r requirements.txt && \
+    python3 -m pip install -r requirements.txt && \
     sh buildproto.sh
 
 WORKDIR ${GENERIC_FOLDER}/${SERVICE_NAME}
