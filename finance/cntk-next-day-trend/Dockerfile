@@ -80,7 +80,7 @@ RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
                 }'" > ${SNETD_CONFIG}
 
 RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
-    pip3 install -r requirements.txt && \
+    pip install -r requirements.txt && \
     sh buildproto.sh
 
 WORKDIR ${FINANCE_FOLDER}/${SERVICE_NAME}
