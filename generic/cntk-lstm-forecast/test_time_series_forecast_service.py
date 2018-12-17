@@ -23,41 +23,41 @@ if __name__ == "__main__":
         # Open a gRPC channel
         channel = grpc.insecure_channel("{}".format(endpoint))
 
-        grpc_method = input("Method (forecast): ") if not test_flag else "forecast"
+        grpc_method = input("Method (forecast): ") if not test_flag else ""
         if grpc_method == "":
             grpc_method = "forecast"
 
-        window_len = input("Window length (24): ") if not test_flag else 24
+        window_len = input("Window length (24): ") if not test_flag else ""
         if window_len == "":
             window_len = 24
 
-        word_len = input("Word length (8): ") if not test_flag else 8
+        word_len = input("Word length (8): ") if not test_flag else ""
         if word_len == "":
             word_len = 8
 
-        alphabet_size = input("Alphabet size (5): ") if not test_flag else 5
+        alphabet_size = input("Alphabet size (5): ") if not test_flag else ""
         if alphabet_size == "":
             alphabet_size = 5
 
         # CSV or Financial
-        source_type = input("Source Type (finance): ") if not test_flag else "financial"
+        source_type = input("Source Type (finance): ") if not test_flag else ""
         if source_type == "":
             source_type = "financial"
 
-        source = input("Source (yahoo): ") if not test_flag else "yahoo"
+        source = input("Source (yahoo): ") if not test_flag else ""
         if source == "":
             source = "yahoo"
 
         # Financial data
-        contract = input("Contract (SPY): ") if not test_flag else "SPY"
+        contract = input("Contract (SPY): ") if not test_flag else ""
         if contract == "":
             contract = "SPY"
 
-        start_date = input("Start date (2018-12-13): ") if not test_flag else "2018-12-13"
+        start_date = input("Start date (2018-01-01): ") if not test_flag else ""
         if start_date == "":
-            start_date = "2018-12-13"
+            start_date = "2018-01-01"
 
-        end_date = input("End date (2018-12-13): ") if not test_flag else "2018-12-13"
+        end_date = input("End date (2018-12-13): ") if not test_flag else ""
         if end_date == "":
             end_date = "2018-12-13"
 
