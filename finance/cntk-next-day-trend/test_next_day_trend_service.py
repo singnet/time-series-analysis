@@ -34,17 +34,17 @@ if __name__ == "__main__":
         if contract == "":
             contract = "SPY"
 
-        start = input("Start Date(2018-01-01): ") if not test_flag else ""
+        start = input("Start Date(2017-01-01): ") if not test_flag else ""
         if start == "":
-            start = "2018-01-01"
+            start = "2017-01-01"
 
         end = input("End Date(2018-12-01): ") if not test_flag else ""
         if end == "":
             end = "2018-12-01"
 
-        target_date = input("Target Date(2018-12-14): ") if not test_flag else ""
+        target_date = input("Target Date(2018-12-13): ") if not test_flag else ""
         if target_date == "":
-            target_date = "2018-12-14"
+            target_date = "2018-12-13"
 
         if grpc_method == "trend":
             stub = grpc_bt_grpc.NextDayTrendStub(channel)
