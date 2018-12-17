@@ -80,7 +80,7 @@ RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
                 }'" > ${SNETD_CONFIG}
 
 RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
-    python3 -m pip install -r requirements.txt && \
+    /root/anaconda3/envs/cntk-py35/bin/pip install -r requirements.txt && \
     sh buildproto.sh
 
 WORKDIR ${FINANCE_FOLDER}/${SERVICE_NAME}
