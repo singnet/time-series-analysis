@@ -9,6 +9,7 @@ jobs:
       SERVICE_RUN_SCRIPT: run_next_day_trend_service.py
       SERVICE_TEST_SCRIPT: test_next_day_trend_service.py
       SNETD_PORT: 7070
+      PYTHON_INTERPRETER: /root/anaconda3/envs/cntk-py35/bin/python
     steps:
       - run:
           name: Deploy Over SSH
@@ -21,7 +22,7 @@ jobs:
                 --name $DOCKER_CONTAINER_NAME_CNTK_TSNDT \
                 --restart unless-stopped \
                 -p $SNETD_PORT:$SNETD_PORT \
-                -di $DOCKER_IMAGE_NAME_CNTK_TSNDT sh -c "git pull;python $SERVICE_RUN_SCRIPT"
+                -di $DOCKER_IMAGE_NAME_CNTK_TSNDT sh -c "git pull;$PYTHON_INTERPRETER $SERVICE_RUN_SCRIPT"
             EOF
       - run:
           name: Remove Old Docker Container
@@ -33,7 +34,7 @@ jobs:
           name: Test local
           command: |
             ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSNDT python $SERVICE_TEST_SCRIPT auto
+              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSNDT $PYTHON_INTERPRETER $SERVICE_TEST_SCRIPT auto
             EOF
   deploy-cntk-lstm-forecast:
     docker:
@@ -44,6 +45,7 @@ jobs:
       SERVICE_RUN_SCRIPT: run_time_series_forecast_service.py
       SERVICE_TEST_SCRIPT: test_time_series_forecast_service.py
       SNETD_PORT: 7071
+      PYTHON_INTERPRETER: /root/anaconda3/envs/cntk-py35/bin/python
     steps:
       - run:
           name: Deploy Over SSH
@@ -56,7 +58,7 @@ jobs:
                 --name $DOCKER_CONTAINER_NAME_CNTK_TSF \
                 --restart unless-stopped \
                 -p $SNETD_PORT:$SNETD_PORT \
-                -di $DOCKER_IMAGE_NAME_CNTK_TSF sh -c "git pull;python $SERVICE_RUN_SCRIPT"
+                -di $DOCKER_IMAGE_NAME_CNTK_TSF sh -c "git pull;$PYTHON_INTERPRETER $SERVICE_RUN_SCRIPT"
             EOF
       - run:
           name: Remove Old Docker Container
@@ -68,7 +70,7 @@ jobs:
           name: Test local
           command: |
             ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSF python $SERVICE_TEST_SCRIPT auto
+              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSF $PYTHON_INTERPRETER $SERVICE_TEST_SCRIPT auto
             EOF
 
 workflows:
