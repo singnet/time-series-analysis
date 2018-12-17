@@ -30,9 +30,11 @@ if __name__ == "__main__":
         window_len = input("Window length (24): ") if not test_flag else 24
         if window_len == "":
             window_len = 24
+
         word_len = input("Word length (8): ") if not test_flag else 8
         if word_len == "":
             word_len = 8
+
         alphabet_size = input("Alphabet size (5): ") if not test_flag else 5
         if alphabet_size == "":
             alphabet_size = 5
@@ -41,6 +43,7 @@ if __name__ == "__main__":
         source_type = input("Source Type (finance): ") if not test_flag else "financial"
         if source_type == "":
             source_type = "financial"
+
         source = input("Source (yahoo): ") if not test_flag else "yahoo"
         if source == "":
             source = "yahoo"
@@ -49,12 +52,14 @@ if __name__ == "__main__":
         contract = input("Contract (SPY): ") if not test_flag else "SPY"
         if contract == "":
             contract = "SPY"
-        start_date = input("Start date (2012-01-01): ") if not test_flag else "2012-01-01"
+
+        start_date = input("Start date (2018-12-13): ") if not test_flag else "2018-12-13"
         if start_date == "":
-            start_date = "2012-01-01"
-        end_date = input("End date (2018-12-10): ") if not test_flag else "2018-12-10"
+            start_date = "2018-12-13"
+
+        end_date = input("End date (2018-12-13): ") if not test_flag else "2018-12-13"
         if end_date == "":
-            end_date = "2018-12-10"
+            end_date = "2018-12-13"
 
         if grpc_method == "forecast":
             stub = grpc_bt_grpc.ForecastStub(channel)
