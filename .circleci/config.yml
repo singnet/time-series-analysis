@@ -1,78 +1,91 @@
-version: 2
+commands:
+  bnd_cmd:
+    description: "Build and deploy SingularityNET Services"
+    parameters:
+      docker_image_name:
+        type: string
+        default: ""
+      docker_container_name:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Build docker image
+          command: |
+            echo "==================================================== Configs ==================================================="
+            export DOCKER_IMAGE_NAME=<< parameters.docker_image_name >>
+            export DOCKER_CONTAINER_NAME=<< parameters.docker_container_name >>
+            PROD_TAG=$([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "PROD_" || echo "")
+            echo            git_user  : ${CIRCLE_PROJECT_USERNAME}
+            echo            git_repo  : ${CIRCLE_PROJECT_REPONAME}
+            echo            git_branch: ${CIRCLE_BRANCH}
+            echo DOCKER_IMAGE_NAME    : ${DOCKER_IMAGE_NAME}
+            echo DOCKER_CONTAINER_NAME: ${DOCKER_CONTAINER_NAME}
+            echo "================================================================================================================"
+            ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
+              nvidia-docker stop ${PROD_TAG}${DOCKER_CONTAINER_NAME} || true && nvidia-docker rename ${PROD_TAG}${DOCKER_CONTAINER_NAME} ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true
+              nvidia-docker build \
+                --build-arg git_owner=${CIRCLE_PROJECT_USERNAME} \
+                --build-arg git_repo=${CIRCLE_PROJECT_REPONAME} \
+                --build-arg git_branch=${CIRCLE_BRANCH} \
+                -t ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git#${CIRCLE_BRANCH}:${SERVICE_FOLDER}
+              nvidia-docker run --runtime=nvidia \
+                --name ${PROD_TAG}${DOCKER_CONTAINER_NAME} \
+                --restart unless-stopped \
+                $([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "-p ${SNETD_PORT}:${SNETD_PORT}" || echo "") \
+                -di ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} ${SERVICE_RUN_COMMAND}
+            EOF
+      - run:
+          name: Remove Old Docker Container
+          command: |
+            export DOCKER_IMAGE_NAME=<< parameters.docker_image_name >>
+            export DOCKER_CONTAINER_NAME=<< parameters.docker_container_name >>
+            PROD_TAG=$([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "PROD_" || echo "")
+            ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
+            nvidia-docker stop ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true && nvidia-docker rm ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true
+            EOF
+      - run:
+          name: Test local
+          command: |
+            export DOCKER_IMAGE_NAME=<< parameters.docker_image_name >>
+            export DOCKER_CONTAINER_NAME=<< parameters.docker_container_name >>
+            PROD_TAG=$([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "PROD_" || echo "")
+            ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
+              nvidia-docker exec -i ${PROD_TAG}${DOCKER_CONTAINER_NAME} ${SERVICE_TEST_COMMAND}
+            EOF
+
+version: 2.1
 jobs:
   deploy-cntk-next-day-trend:
     docker:
       - image: circleci/python:3.6.6-node
     working_directory: ~/singnet
     environment:
-      SERVICE_NAME: cntk-next-day-trend
-      SERVICE_RUN_SCRIPT: run_next_day_trend_service.py
-      SERVICE_TEST_SCRIPT: test_next_day_trend_service.py
+      SERVICE_FOLDER: /finance/cntk-next-day-trend
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py"
+      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
       SNETD_PORT: 7070
     steps:
-      - run:
-          name: Deploy Over SSH
-          command: |
-            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker stop $DOCKER_CONTAINER_NAME_CNTK_TSNDT || true && nvidia-docker rename $DOCKER_CONTAINER_NAME_CNTK_TSNDT ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true
-              nvidia-docker build \
-                -t $DOCKER_IMAGE_NAME_CNTK_TSNDT https://github.com/singnet/time-series-analysis.git#master:/finance/$SERVICE_NAME
-              nvidia-docker run --runtime=nvidia \
-                --name $DOCKER_CONTAINER_NAME_CNTK_TSNDT \
-                --restart unless-stopped \
-                -p $SNETD_PORT:$SNETD_PORT \
-                -di $DOCKER_IMAGE_NAME_CNTK_TSNDT bash -c "source '/cntk/activate-cntk';git pull;python $SERVICE_RUN_SCRIPT"
-            EOF
-      - run:
-          name: Remove Old Docker Container
-          command: |
-            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker stop ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true && nvidia-docker rm ${DOCKER_CONTAINER_NAME_CNTK_TSNDT}_old || true
-            EOF
-      - run:
-          name: Test local
-          command: |
-            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSNDT bash -c "source '/cntk/activate-cntk';python $SERVICE_TEST_SCRIPT auto"
-            EOF
+      - bnd_cmd:
+          docker_image_name: cntk_next_day_trend
+          docker_container_name: ARTUR_CNTK_NEXT_DAY_TREND
+
   deploy-cntk-lstm-forecast:
     docker:
       - image: circleci/python:3.6.6-node
     working_directory: ~/singnet
     environment:
-      SERVICE_NAME: cntk-lstm-forecast
-      SERVICE_RUN_SCRIPT: run_time_series_forecast_service.py
-      SERVICE_TEST_SCRIPT: test_time_series_forecast_service.py
+      SERVICE_FOLDER: /generic/cntk-lstm-forecast
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py"
+      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
       SNETD_PORT: 7071
     steps:
-      - run:
-          name: Deploy Over SSH
-          command: |
-            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker stop $DOCKER_CONTAINER_NAME_CNTK_TSF || true && nvidia-docker rename $DOCKER_CONTAINER_NAME_CNTK_TSF ${DOCKER_CONTAINER_NAME_CNTK_TSF}_old || true
-              nvidia-docker build \
-                -t $DOCKER_IMAGE_NAME_CNTK_TSF https://github.com/singnet/time-series-analysis.git#master:/generic/$SERVICE_NAME
-              nvidia-docker run --runtime=nvidia \
-                --name $DOCKER_CONTAINER_NAME_CNTK_TSF \
-                --restart unless-stopped \
-                -p $SNETD_PORT:$SNETD_PORT \
-                -di $DOCKER_IMAGE_NAME_CNTK_TSF bash -c "source '/cntk/activate-cntk';git pull;python $SERVICE_RUN_SCRIPT"
-            EOF
-      - run:
-          name: Remove Old Docker Container
-          command: |
-            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker stop ${DOCKER_CONTAINER_NAME_CNTK_TSF}_old || true && nvidia-docker rm ${DOCKER_CONTAINER_NAME_CNTK_TSF}_old || true
-            EOF
-      - run:
-          name: Test local
-          command: |
-            ssh -o "StrictHostKeyChecking no" $SSH_USER@$SSH_HOST << EOF
-              nvidia-docker exec -i $DOCKER_CONTAINER_NAME_CNTK_TSF bash -c "source '/cntk/activate-cntk';python $SERVICE_TEST_SCRIPT auto"
-            EOF
+      - bnd_cmd:
+          docker_image_name: cntk_lstm_forecast
+          docker_container_name: ARTUR_CNTK_LSTM_FORECAST
 
 workflows:
-  version: 2
+  version: 2.1
   build-and-deploy:
     jobs:
       - deploy-cntk-next-day-trend
