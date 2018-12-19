@@ -1,7 +1,11 @@
 FROM microsoft/cntk:latest
 
+ARG git_owner
+ARG git_repo
+ARG git_branch
+
 ENV SINGNET_REPOS=/opt/singnet
-ENV TS_REPO_NAME=time-series-analysis
+ENV TS_REPO_NAME=${git_repo}
 ENV FINANCE_FOLDER=${SINGNET_REPOS}/${TS_REPO_NAME}/finance
 ENV SERVICE_NAME=cntk-next-day-trend
 ENV SNETD_PORT=7070
@@ -20,22 +24,22 @@ RUN apt-get install -y \
 RUN cd ${SINGNET_REPOS} && \
     mkdir snet-daemon && \
     cd snet-daemon && \
-    wget https://github.com/singnet/snet-daemon/releases/download/v0.1.3/snetd-0.1.3.tar.gz && \
-    tar -xvf snetd-0.1.3.tar.gz && \
-    mv linux-amd64/snetd /usr/bin/snetd
+    wget https://github.com/singnet/snet-daemon/releases/download/v0.1.4/snetd-0.1.4.tar.gz && \
+    tar -xvf snetd-0.1.4.tar.gz && \
+    mv snetd-0.1.4/snetd-linux-amd64 /usr/bin/snetd
 
 RUN cd ${SINGNET_REPOS} && \
-    git clone https://github.com/singnet/${TS_REPO_NAME}.git
+    git clone https://github.com/${git_owner}/${TS_REPO_NAME}.git
 
 RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
     sh -c "echo '{ \"DAEMON_END_POINT\": \"http://54.203.198.53:${SNETD_PORT}\", \
                    \"ETHEREUM_JSON_RPC_ENDPOINT\": \"https://kovan.infura.io\", \
                    \"IPFS_END_POINT\": \"http://ipfs.singularitynet.io:80\", \
-                   \"REGISTRY_ADDRESS_KEY\": \"0x2e4b2f2b72402b9b2d6a7851e37c856c329afe38\", \
+                   \"REGISTRY_ADDRESS_KEY\": \"0xe331bf20044a5b24c1a744abc90c1fd711d2c08d\", \
                    \"PASSTHROUGH_ENABLED\": true, \
                    \"PASSTHROUGH_ENDPOINT\": \"http://localhost:7003\", \
-                   \"ORGANIZATION_NAME\": \"snet\", \
-                   \"SERVICE_NAME\": \"${SERVICE_NAME}\", \
+                   \"ORGANIZATION_ID\": \"snet\", \
+                   \"SERVICE_ID\": \"${SERVICE_NAME}\", \
                    \"LOG\": { \
                    \"LEVEL\": \"debug\", \
                    \"OUTPUT\": { \
