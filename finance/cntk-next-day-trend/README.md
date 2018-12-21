@@ -107,7 +107,7 @@ Contract(SPY): AMZN
 Start Date(2000-01-01): 2017-01-01
 End Date(2009-01-01): 2017-11-28
 Target Date(2018-11-12): 2018-11-28
-{'UP': 0.53}
+{'DOWN': 0.5}
 ```
 
 Through SingularityNET (follow this [link](https://github.com/singnet/wiki/blob/master/tutorials/howToPublishService/README.md) 
@@ -118,12 +118,7 @@ Assuming that you have an open channel (`id: 0`) to this service:
 ```
 $ snet client call 0 0.00000001 54.203.198.53:7070 trend '{"source": "yahoo", "contract": "AAPL", "start": "2018-01-01", "end": "2018-10-31", "target_date": "2018-11-28"}'
 ...
-Read call params from cmdline...
-
-Calling service...
-
-    response:
-        {'UP': 0.53}
+response: "{'DOWN': 0.51}"
 ```
 
 ## Contributing and Reporting Issues

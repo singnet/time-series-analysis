@@ -62,12 +62,7 @@ Assuming that you have an open channel (`id: 0`) to this service:
 ```
 $ snet client call 0 0.00000001 54.203.198.53:7070 trend '{"source": "yahoo", "contract": "SPY", "start": "2017-01-01", "end": "2017-10-31", "target_date": "2018-11-28"}'
 ...
-Read call params from cmdline...
-
-Calling service...
-
-    response:
-        {'DOWN': 0.54}
+response: "{'DOWN': 0.51}"
 ```
 
 The output format is `{signal: confidence}`, where:
@@ -91,7 +86,7 @@ Input:
 Response:
 
 ```
-{'UP': 0.53}
+response: "{'DOWN': 0.5}"
 ```
 
 Input:
@@ -105,5 +100,5 @@ Input:
 Response:
 
 ```
-{'UP': 0.55}
+response: "{'UP': 0.51}"
 ```
