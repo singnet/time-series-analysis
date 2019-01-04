@@ -65,7 +65,7 @@ for a reference of which data source each tag is related to.
 
 `contract` is supposed to be a valid symbol in the given `source`.
 
-You can use this service from [SingularityNET DApp](http://alpha.singularitynet.io/).
+You can use this service from [SingularityNET DApp](http://beta.singularitynet.io/).
 
 You can also call the service from SingularityNET CLI (`snet`).
 
