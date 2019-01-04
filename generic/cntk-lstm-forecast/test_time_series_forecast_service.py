@@ -63,9 +63,9 @@ if __name__ == "__main__":
 
         if grpc_method == "forecast":
             stub = grpc_bt_grpc.ForecastStub(channel)
-            request = grpc_bt_pb2.Input(window_len=window_len,
-                                        word_len=word_len,
-                                        alphabet_size=alphabet_size,
+            request = grpc_bt_pb2.Input(window_len=int(window_len),
+                                        word_len=int(word_len),
+                                        alphabet_size=int(alphabet_size),
                                         source_type=source_type,
                                         source=source,
                                         contract=contract,

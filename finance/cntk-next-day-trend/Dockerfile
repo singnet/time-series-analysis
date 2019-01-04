@@ -8,6 +8,7 @@ ENV SINGNET_REPOS=/opt/singnet
 ENV TS_REPO_NAME=${git_repo}
 ENV FINANCE_FOLDER=${SINGNET_REPOS}/${TS_REPO_NAME}/finance
 ENV SERVICE_NAME=cntk-next-day-trend
+ENV SNETD_HOST=54.203.198.53
 ENV SNETD_PORT=7070
 ENV SNETD_CONFIG=snetd.config.json
 
@@ -29,10 +30,10 @@ RUN cd ${SINGNET_REPOS} && \
     mv snetd-0.1.4/snetd-linux-amd64 /usr/bin/snetd
 
 RUN cd ${SINGNET_REPOS} && \
-    git clone https://github.com/${git_owner}/${TS_REPO_NAME}.git
+    git clone -b ${git_branch} https://github.com/${git_owner}/${TS_REPO_NAME}.git
 
 RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
-    sh -c "echo '{ \"DAEMON_END_POINT\": \"http://54.203.198.53:${SNETD_PORT}\", \
+    sh -c "echo '{ \"DAEMON_END_POINT\": \"http://${SNETD_HOST}:${SNETD_PORT}\", \
                    \"ETHEREUM_JSON_RPC_ENDPOINT\": \"https://kovan.infura.io\", \
                    \"IPFS_END_POINT\": \"http://ipfs.singularitynet.io:80\", \
                    \"REGISTRY_ADDRESS_KEY\": \"0xe331bf20044a5b24c1a744abc90c1fd711d2c08d\", \
