@@ -27,7 +27,7 @@ This service uses a CNTK MLP to predict whether or not, for an input date, marke
 
 ## Contributing and Reporting Issues
 
-Please read our [guidelines](https://github.com/singnet/wiki/blob/master/guidelines/CONTRIBUTING.md#submitting-an-issue) 
+Please read our [guidelines](https://dev.singularitynet.io/docs/contribute/contribution-guidelines/#submitting-an-issue) 
 before submitting an issue. If your issue is a bug, please use the bug template pre-populated [here][issue-template]. 
 For feature requests and queries you can use [this template][feature-template].
 

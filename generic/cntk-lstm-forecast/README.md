@@ -28,7 +28,7 @@ $ cd generic/cntk-lstm-forecast
 
 ### Running the service:
 
-To get the `ORGANIZATION_ID` and `SERVICE_ID` you must have already published a service (check this [link](https://github.com/singnet/wiki/tree/master/tutorials/howToPublishService)).
+To get the `ORGANIZATION_ID` and `SERVICE_ID` you must have already published a service (check this [link](https://dev.singularitynet.io/tutorials/publish/)).
 
 Create the `SNET Daemon`'s config JSON file (`snetd.config.json`).
 
@@ -139,7 +139,7 @@ position_in_sax_interval: 0.14
 
 for further instructions about the output of this service, check the [User's Guide](../../docs/users_guide/generic/cntk-lstm-forecast.md).
 
-Through SingularityNET (follow this [link](https://github.com/singnet/wiki/blob/master/tutorials/howToPublishService/README.md) 
+Through SingularityNET (follow this [link](https://dev.singularitynet.io/tutorials/publish/) 
 to learn how to publish a service and open a payment channel to be able to call it):
 
 Assuming that you have an open channel (`id: 0`) to this service:
@@ -154,7 +154,7 @@ position_in_sax_interval: 0.2819729149341583
 
 ## Contributing and Reporting Issues
 
-Please read our [guidelines](https://github.com/singnet/wiki/blob/master/guidelines/CONTRIBUTING.md#submitting-an-issue) before submitting an issue. 
+Please read our [guidelines](https://dev.singularitynet.io/docs/contribute/contribution-guidelines/#submitting-an-issue) before submitting an issue. 
 If your issue is a bug, please use the bug template pre-populated [here][issue-template]. 
 For feature requests and queries you can use [this template][feature-template].
 
