@@ -50,7 +50,7 @@ commands:
             echo ETCD_CONTAINER_FOLDER: ${ETCD_CONTAINER_FOLDER}
             echo "================================================================================================================"
 
-            ssh -o "StrictHostKeyChecking no" ${DEPLOY_SSH_USER}@${DEPLOY_SSH_HOST} \<< EOF
+            ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
               nvidia-docker stop ${PROD_TAG}${DOCKER_CONTAINER_NAME} || true && nvidia-docker rename ${PROD_TAG}${DOCKER_CONTAINER_NAME} ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true
               nvidia-docker build \
                 --build-arg git_owner=${CIRCLE_PROJECT_USERNAME} \
