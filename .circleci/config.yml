@@ -60,7 +60,8 @@ commands:
               nvidia-docker run --runtime=nvidia \
                 --name ${PROD_TAG}${DOCKER_CONTAINER_NAME} \
                 --restart unless-stopped \
-                $([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "-p ${SNETD_PORT}:${SNETD_PORT}" || echo "") \
+                $([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "-p ${SNETD_PORT_KOVAN}:${SNETD_PORT_KOVAN}" || echo "") \
+                $([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "-p ${SNETD_PORT_ROPSTEN}:${SNETD_PORT_ROPSTEN}" || echo "") \
                 $([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "-v ~/${ETCD_HOST_FOLDER}:/${ETCD_CONTAINER_FOLDER}" || echo "") \
                 $([ "${DOCKER_MOUNT_VOLUMES}" = "true" ] && echo "-v ${DOCKER_MOUNT_SRC}:${DOCKER_MOUNT_DEST}" || echo "") \
                 -di ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} ${SERVICE_RUN_COMMAND}
@@ -97,13 +98,14 @@ jobs:
       SERVICE_FOLDER: finance/cntk-next-day-trend
       SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py"
       SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
-      SNETD_PORT: 7070
+      SNETD_PORT_KOVAN: 7001
+      SNETD_PORT_ROPSTEN: 7051
     steps:
       - bnd_cmd:
           docker_image_name: cntk_next_day_trend
           docker_container_name: ARTUR_CNTK_NEXT_DAY_TREND
           docker_etcd_host_folder: singnet/etcd/${SERVICE_NAME}/
-          docker_etcd_container_folder: opt/singnet/${CIRCLE_PROJECT_REPONAME}/${SERVICE_FOLDER}/storage-data-dir-1.etcd/
+          docker_etcd_container_folder: opt/singnet/${CIRCLE_PROJECT_REPONAME}/${SERVICE_FOLDER}/etcd/
 
   deploy-cntk-lstm-forecast:
     docker:
@@ -114,13 +116,14 @@ jobs:
       SERVICE_FOLDER: generic/cntk-lstm-forecast
       SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py"
       SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
-      SNETD_PORT: 7071
+      SNETD_PORT_KOVAN: 7009
+      SNETD_PORT_ROPSTEN: 7059
     steps:
       - bnd_cmd:
           docker_image_name: cntk_lstm_forecast
           docker_container_name: ARTUR_CNTK_LSTM_FORECAST
           docker_etcd_host_folder: singnet/etcd/${SERVICE_NAME}/
-          docker_etcd_container_folder: opt/singnet/${CIRCLE_PROJECT_REPONAME}/${SERVICE_FOLDER}/storage-data-dir-1.etcd/
+          docker_etcd_container_folder: opt/singnet/${CIRCLE_PROJECT_REPONAME}/${SERVICE_FOLDER}/etcd/
 
 workflows:
   version: 2.1
