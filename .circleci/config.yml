@@ -101,6 +101,10 @@ jobs:
       SNETD_PORT_KOVAN: 7001
       SNETD_PORT_ROPSTEN: 7051
     steps:
+      - run:
+          name: Test SSH_USER
+          command: |
+            $([ "${SSH_USER}" = "admin" ] && echo "OK" || echo "FAIL")
       - bnd_cmd:
           docker_image_name: cntk_next_day_trend
           docker_container_name: ARTUR_CNTK_NEXT_DAY_TREND
