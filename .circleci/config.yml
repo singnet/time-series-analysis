@@ -94,7 +94,6 @@ jobs:
       - image: circleci/python:3.6.6-node
     working_directory: ~/singnet
     environment:
-      DEPLOY_SSH_USER}@${DEPLOY_SSH_HOST}
       SERVICE_NAME: cntk-next-day-trend
       SERVICE_FOLDER: finance/cntk-next-day-trend
       SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py"
