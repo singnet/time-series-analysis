@@ -2,3 +2,4 @@
 data/
 **/service/*.json
 **/service_spec/*.py
+**/etcd/
