@@ -213,7 +213,7 @@ jobs:
       SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py"
       SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
       SNETD_PORT_KOVAN: 7001
-      SNETD_PORT_ROPSTEN: 7053
+      SNETD_PORT_ROPSTEN: 7051
     steps:
       - deploy_command:
           docker_nvidia: true
