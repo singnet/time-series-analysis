@@ -1,5 +1,6 @@
 grpcio>=1.14.2
 grpcio-tools>=1.14.1
 cntk==2.5
-pandas_datareader>=0.7.0
+pandas==0.23.4
+pandas_datareader==0.7.0
 saxpy
