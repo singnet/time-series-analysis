@@ -28,8 +28,8 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
         self.word_len = -1
         self.alphabet_size = -1
 
-        # CSV or Finance
-        self.source_type = "finance"
+        # CSV or Financial
+        self.source_type = "financial"
         self.source = "yahoo"
 
         # Financial data

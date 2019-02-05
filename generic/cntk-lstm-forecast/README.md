@@ -34,7 +34,7 @@ Create the `SNET Daemon`'s config JSON file (`snetd.config.json`).
 
 ```
 {
-   "DAEMON_END_POINT": "http://DAEMON_HOST:DAEMON_PORT",
+   "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
    "ETHEREUM_JSON_RPC_ENDPOINT": "JSON_RPC_ENDPOINT",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "REGISTRY_ADDRESS_KEY": "REGISTRY_ADDRESS",
@@ -56,7 +56,7 @@ For example (using the Kovan testnet):
 ```
 $ cat snetd.config.json
 {
-   "DAEMON_END_POINT": "http://54.203.198.53:7009",
+   "DAEMON_END_POINT": "0.0.0.0:7009",
    "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "REGISTRY_ADDRESS_KEY": "0xe331bf20044a5b24c1a744abc90c1fd711d2c08d",
@@ -72,6 +72,9 @@ $ cat snetd.config.json
    }
 }
 ```
+
+Note that we set `DAEMON_HOST = 0.0.0.0` because this service will run inside a Docker container.
+
 Install all dependencies:
 ```
 $ pip3 install -r requirements.txt
@@ -119,7 +122,7 @@ Method (forecast):
 Window length (24): 
 Word length (8): 
 Alphabet length (5): 
-Source Type (finance): 
+Source Type (financial): 
 Source (yahoo): 
 Contract (SPY): 
 Start date (2012-01-01): 
