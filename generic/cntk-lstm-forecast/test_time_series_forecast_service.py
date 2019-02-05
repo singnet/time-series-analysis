@@ -40,7 +40,7 @@ if __name__ == "__main__":
             alphabet_size = 5
 
         # CSV or Financial
-        source_type = input("Source Type (finance): ") if not test_flag else ""
+        source_type = input("Source Type (financial): ") if not test_flag else ""
         if source_type == "":
             source_type = "financial"
 
