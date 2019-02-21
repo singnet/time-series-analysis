@@ -135,6 +135,7 @@ commands:
             echo DOCKER_MOUNT_DEST    : ${DOCKER_MOUNT_DEST}
             echo ETCD_HOST_FOLDER     : ${ETCD_HOST_FOLDER}
             echo ETCD_CONTAINER_FOLDER: ${ETCD_CONTAINER_FOLDER}
+            echo CERTS_FOLDER         : ${CERTS_FOLDER}
             echo "======================================================================================================================"
 
             if [ "$DOCKER_DEPLOY" = "true" ]; then
@@ -152,6 +153,7 @@ commands:
                     --restart unless-stopped \
                     $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-p ${SNETD_PORT_KOVAN}:${SNETD_PORT_KOVAN}" || echo "") \
                     $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-p ${SNETD_PORT_ROPSTEN}:${SNETD_PORT_ROPSTEN}" || echo "") \
+                    $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-v ~/${CERTS_FOLDER}:/opt/singnet/.certs" || echo "") \
                     $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-v ~/${ETCD_HOST_FOLDER}:/${ETCD_CONTAINER_FOLDER}" || echo "") \
                     $([ "${DOCKER_MOUNT_VOLUMES}" = "true" ] && echo "-v ${DOCKER_MOUNT_SRC}:${DOCKER_MOUNT_DEST}" || echo "") \
                     -di ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} ${SERVICE_RUN_COMMAND}
@@ -216,7 +218,8 @@ jobs:
     environment:
       SERVICE_NAME: cntk-next-day-trend
       SERVICE_FOLDER: finance/cntk-next-day-trend
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py"
+      CERTS_FOLDER: singnet/.certs
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py --ssl"
       SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
       SNETD_PORT_KOVAN: 7001
       SNETD_PORT_ROPSTEN: 7051
@@ -250,7 +253,8 @@ jobs:
     environment:
       SERVICE_NAME: cntk-lstm-forecast
       SERVICE_FOLDER: generic/cntk-lstm-forecast
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py"
+      CERTS_FOLDER: singnet/.certs
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl"
       SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
       SNETD_PORT_KOVAN: 7009
       SNETD_PORT_ROPSTEN: 7059
