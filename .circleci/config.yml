@@ -20,7 +20,20 @@ commands:
       docker_mount_dest:
         type: string
         default: ""
+      docker_snetd_version:
+        type: string
+        default: "v0.1.7"
     steps:
+      - run:
+          name: Removing old Docker Container (Previous Builds)
+          command: |
+            export DOCKER_IMAGE_NAME=<< parameters.docker_image_name >>
+            export DOCKER_CONTAINER_NAME=<< parameters.docker_container_name >>
+            export PROD_TAG=$([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "PROD_" || echo "")
+
+            ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
+              docker stop ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true && docker rm ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true
+            EOF
       - run:
           name: Building
           command: |
@@ -31,6 +44,7 @@ commands:
             export DOCKER_MOUNT_VOLUMES=<< parameters.docker_mount_volumes >>
             export DOCKER_MOUNT_SRC=<< parameters.docker_mount_src >>
             export DOCKER_MOUNT_DEST=<< parameters.docker_mount_dest >>
+            export SNETD_VERSION=<< parameters.docker_snetd_version >>
             export PROD_TAG=$([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "PROD_" || echo "")
             echo            git_user  : ${CIRCLE_PROJECT_USERNAME}
             echo            git_repo  : ${CIRCLE_PROJECT_REPONAME}
@@ -43,6 +57,7 @@ commands:
             echo DOCKER_MOUNT_VOLUMES : ${DOCKER_MOUNT_VOLUMES}
             echo DOCKER_MOUNT_SRC     : ${DOCKER_MOUNT_SRC}
             echo DOCKER_MOUNT_DEST    : ${DOCKER_MOUNT_DEST}
+            echo SNETD_VERSION        : ${SNETD_VERSION}
             echo "======================================================================================================================"
 
             ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
@@ -51,6 +66,7 @@ commands:
                 --build-arg git_owner=${CIRCLE_PROJECT_USERNAME} \
                 --build-arg git_repo=${CIRCLE_PROJECT_REPONAME} \
                 --build-arg git_branch=${CIRCLE_BRANCH} \
+                --build-arg snetd_version=${SNETD_VERSION} \
                 -t ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} https://raw.githubusercontent.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/${SERVICE_FOLDER}/Dockerfile
               docker run \
                 $([ "${DOCKER_NVIDIA}" = "true" ] && echo "--runtime=nvidia" || echo "") \
@@ -106,7 +122,20 @@ commands:
       docker_mount_dest:
         type: string
         default: ""
+      docker_snetd_version:
+        type: string
+        default: "v0.1.7"
     steps:
+      - run:
+          name: Removing old Docker Container (Previous Builds)
+          command: |
+            export DOCKER_IMAGE_NAME=<< parameters.docker_image_name >>
+            export DOCKER_CONTAINER_NAME=<< parameters.docker_container_name >>
+            export PROD_TAG=$([ "${CIRCLE_PROJECT_USERNAME}" = "singnet" ] && echo "PROD_" || echo "")
+
+            ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
+              docker stop ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true && docker rm ${PROD_TAG}${DOCKER_CONTAINER_NAME}_old || true
+            EOF
       - run:
           name: Deploying
           command: |
@@ -120,6 +149,7 @@ commands:
             export DOCKER_MOUNT_DEST=<< parameters.docker_mount_dest >>
             export ETCD_HOST_FOLDER=<< parameters.docker_etcd_host_folder >>
             export ETCD_CONTAINER_FOLDER=<< parameters.docker_etcd_container_folder >>
+            export SNETD_VERSION=<< parameters.docker_snetd_version >>
             export PROD_TAG=$([ "${DOCKER_DEPLOY}" = "true" ] && echo "PROD_" || echo "")
             echo            git_user  : ${CIRCLE_PROJECT_USERNAME}
             echo            git_repo  : ${CIRCLE_PROJECT_REPONAME}
@@ -135,6 +165,7 @@ commands:
             echo DOCKER_MOUNT_DEST    : ${DOCKER_MOUNT_DEST}
             echo ETCD_HOST_FOLDER     : ${ETCD_HOST_FOLDER}
             echo ETCD_CONTAINER_FOLDER: ${ETCD_CONTAINER_FOLDER}
+            echo SNETD_VERSION        : ${SNETD_VERSION}
             echo CERTS_FOLDER         : ${CERTS_FOLDER}
             echo "======================================================================================================================"
 
@@ -146,12 +177,13 @@ commands:
                     --build-arg git_owner=${CIRCLE_PROJECT_USERNAME} \
                     --build-arg git_repo=${CIRCLE_PROJECT_REPONAME} \
                     --build-arg git_branch=${CIRCLE_BRANCH} \
+                    --build-arg snetd_version=${SNETD_VERSION} \
                     -t ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} https://raw.githubusercontent.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/${SERVICE_FOLDER}/Dockerfile
                     docker run \
                     $([ "${DOCKER_NVIDIA}" = "true" ] && echo "--runtime=nvidia" || echo "") \
                     --name ${PROD_TAG}${DOCKER_CONTAINER_NAME} \
                     --restart unless-stopped \
-                    $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-p ${SNETD_PORT_KOVAN}:${SNETD_PORT_KOVAN}" || echo "") \
+                    $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-p ${SNETD_PORT_MAINNET}:${SNETD_PORT_MAINNET}" || echo "") \
                     $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-p ${SNETD_PORT_ROPSTEN}:${SNETD_PORT_ROPSTEN}" || echo "") \
                     $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-v ~/${CERTS_FOLDER}:/opt/singnet/.certs" || echo "") \
                     $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-v ~/${ETCD_HOST_FOLDER}:/${ETCD_CONTAINER_FOLDER}" || echo "") \
@@ -221,7 +253,7 @@ jobs:
       CERTS_FOLDER: singnet/.certs
       SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py --ssl"
       SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
-      SNETD_PORT_KOVAN: 7001
+      SNETD_PORT_MAINNET: 7001
       SNETD_PORT_ROPSTEN: 7051
     steps:
       - deploy_command:
@@ -256,7 +288,7 @@ jobs:
       CERTS_FOLDER: singnet/.certs
       SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl"
       SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
-      SNETD_PORT_KOVAN: 7009
+      SNETD_PORT_MAINNET: 7009
       SNETD_PORT_ROPSTEN: 7059
     steps:
       - deploy_command:

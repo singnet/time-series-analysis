@@ -51,15 +51,15 @@ Create the `SNET Daemon`'s config JSON file (`snetd.config.json`).
 }
 ```
 
-For example (using the Kovan testnet):
+For example (using the Ropsten testnet):
 
 ```
 $ cat snetd.config.json
 {
-   "DAEMON_END_POINT": "0.0.0.0:7001",
-   "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
+   "DAEMON_END_POINT": "0.0.0.0:7051",
+   "ETHEREUM_JSON_RPC_ENDPOINT": "https://ropsten.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
-   "REGISTRY_ADDRESS_KEY": "0xe331bf20044a5b24c1a744abc90c1fd711d2c08d",
+   "REGISTRY_ADDRESS_KEY": "0x5156fde2ca71da4398f8c76763c41bc9633875e4",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
    "ORGANIZATION_ID": "snet",
@@ -119,7 +119,7 @@ to learn how to publish a service and open a payment channel to be able to call 
 Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
-$ snet client call 0 0.00000001 54.203.198.53:7070 trend '{"source": "yahoo", "contract": "AAPL", "start": "2018-01-01", "end": "2018-10-31", "target_date": "2018-11-28"}'
+$ snet client call snet cntk-next-day-trend trend '{"source": "yahoo", "contract": "AAPL", "start": "2018-01-01", "end": "2018-10-31", "target_date": "2018-11-28"}'
 ...
 response: "{'DOWN': 0.51}"
 ```

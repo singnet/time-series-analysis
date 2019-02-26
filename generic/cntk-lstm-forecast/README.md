@@ -51,15 +51,15 @@ Create the `SNET Daemon`'s config JSON file (`snetd.config.json`).
 }
 ```
 
-For example (using the Kovan testnet):
+For example (using the Ropsten testnet):
 
 ```
 $ cat snetd.config.json
 {
-   "DAEMON_END_POINT": "0.0.0.0:7009",
-   "ETHEREUM_JSON_RPC_ENDPOINT": "https://kovan.infura.io",
+   "DAEMON_END_POINT": "0.0.0.0:7059",
+   "ETHEREUM_JSON_RPC_ENDPOINT": "https://ropsten.infura.io",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
-   "REGISTRY_ADDRESS_KEY": "0xe331bf20044a5b24c1a744abc90c1fd711d2c08d",
+   "REGISTRY_ADDRESS_KEY": "0x5156fde2ca71da4398f8c76763c41bc9633875e4",
    "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
    "ORGANIZATION_ID": "snet",
@@ -148,7 +148,7 @@ to learn how to publish a service and open a payment channel to be able to call 
 Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
-$ snet client call 0 0.00000001 54.203.198.53:7071 forecast '{"window_len": 36, "word_len": 18, "alphabet_size": 5, "source_type": "financial", "source": "yahoo", "contract": "AAPL", "start_date": "2017-01-01", "end_date": "2018-12-10"}'
+$ snet client call cntk-lstm-forecast forecast '{"window_len": 36, "word_len": 18, "alphabet_size": 5, "source_type": "financial", "source": "yahoo", "contract": "AAPL", "start_date": "2017-01-01", "end_date": "2018-12-10"}'
 unspent_amount_in_cogs before call (None means that we cannot get it now):1
 last_sax_word: "eeeeeedddcbbaaaaaa"
 forecast_sax_letter: "c"
