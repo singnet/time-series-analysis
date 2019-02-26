@@ -235,8 +235,8 @@ jobs:
     environment:
       SERVICE_NAME: cntk-next-day-trend
       SERVICE_FOLDER: finance/cntk-next-day-trend
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py"
-      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 run_next_day_trend_service.py"
+      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 test_next_day_trend_service.py auto"
     steps:
       - build_command:
           docker_nvidia: true
@@ -251,8 +251,8 @@ jobs:
       SERVICE_NAME: cntk-next-day-trend
       SERVICE_FOLDER: finance/cntk-next-day-trend
       CERTS_FOLDER: singnet/.certs
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py --ssl"
-      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 run_next_day_trend_service.py --ssl"
+      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 test_next_day_trend_service.py auto"
       SNETD_PORT_MAINNET: 7001
       SNETD_PORT_ROPSTEN: 7051
     steps:
@@ -270,8 +270,8 @@ jobs:
     environment:
       SERVICE_NAME: cntk-lstm-forecast
       SERVICE_FOLDER: generic/cntk-lstm-forecast
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py"
-      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 run_time_series_forecast_service.py"
+      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 test_time_series_forecast_service.py auto"
     steps:
       - build_command:
           docker_nvidia: true
@@ -286,8 +286,8 @@ jobs:
       SERVICE_NAME: cntk-lstm-forecast
       SERVICE_FOLDER: generic/cntk-lstm-forecast
       CERTS_FOLDER: singnet/.certs
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl"
-      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
+      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 run_time_series_forecast_service.py --ssl"
+      SERVICE_TEST_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 test_time_series_forecast_service.py auto"
       SNETD_PORT_MAINNET: 7009
       SNETD_PORT_ROPSTEN: 7059
     steps:
