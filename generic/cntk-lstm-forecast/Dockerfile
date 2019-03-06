@@ -1,13 +1,12 @@
 FROM microsoft/cntk:latest
 
-ARG git_owner
-ARG git_repo
-ARG git_branch
-ARG snetd_version="v0.1.7"
+ARG git_owner="singnet"
+ARG git_repo="time-series-analysis"
+ARG git_branch="master"
+ARG snetd_version
 
 ENV SINGNET_REPOS=/opt/singnet
-ENV TS_REPO_NAME=${git_repo}
-ENV GENERIC_FOLDER=${SINGNET_REPOS}/${TS_REPO_NAME}/generic
+ENV GENERIC_FOLDER=${SINGNET_REPOS}/${git_repo}/generic
 ENV SERVICE_NAME=cntk-lstm-forecast
 
 RUN mkdir -p ${SINGNET_REPOS}
@@ -28,7 +27,7 @@ RUN cd ${SINGNET_REPOS} && \
     mv snet-daemon-${snetd_version}-linux-amd64/snetd /usr/bin/snetd
 
 RUN cd ${SINGNET_REPOS} && \
-    git clone -b ${git_branch} https://github.com/${git_owner}/${TS_REPO_NAME}.git
+    git clone -b ${git_branch} https://github.com/${git_owner}/${git_repo}.git
 
 RUN cd ${GENERIC_FOLDER}/${SERVICE_NAME} && \
     /root/anaconda3/envs/cntk-py35/bin/python -m pip install -r requirements.txt && \

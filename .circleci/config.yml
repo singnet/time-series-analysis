@@ -22,7 +22,7 @@ commands:
         default: ""
       docker_snetd_version:
         type: string
-        default: "v0.1.7"
+        default: "v0.1.8"
     steps:
       - run:
           name: Removing old Docker Container (Previous Builds)
@@ -124,7 +124,7 @@ commands:
         default: ""
       docker_snetd_version:
         type: string
-        default: "v0.1.7"
+        default: "v0.1.8"
     steps:
       - run:
           name: Removing old Docker Container (Previous Builds)
