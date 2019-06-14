@@ -5,7 +5,6 @@ ARG git_repo="time-series-analysis"
 ARG git_branch="master"
 
 ENV SINGNET_REPOS=/opt/singnet
-ENV git_repo=${git_repo}
 ENV FINANCE_FOLDER=${SINGNET_REPOS}/${git_repo}/finance
 ENV SERVICE_NAME=cntk-next-day-trend
 
