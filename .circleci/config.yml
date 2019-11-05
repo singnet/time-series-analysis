@@ -187,6 +187,9 @@ jobs:
     steps:
       - checkout
       - build_and_deploy:
+          domain: ${DOMAIN_CNTK_NEXT_DAY_TREND}
+          ssh_user_env_var: ${SSH_USER}
+          ssh_host_env_var: ${SSH_HOST}
           docker_nvidia: true
           docker_image_name: cntk_next_day_trend
           docker_container_name: CNTK_NEXT_DAY_TREND
@@ -208,6 +211,9 @@ jobs:
     steps:
       - checkout
       - build_and_deploy:
+          domain: ${DOMAIN_CNTK_LSTM_FORECAST}
+          ssh_user_env_var: ${SSH_USER}
+          ssh_host_env_var: ${SSH_HOST}
           docker_nvidia: true
           docker_image_name: cntk_lstm_forecast
           docker_container_name: CNTK_LSTM_FORECAST
@@ -216,7 +222,7 @@ jobs:
 
 workflows:
   version: 2.1
-  build_deploy_dnn_services:
+  build_deploy_ts_services:
     jobs:
       - cntk-next-day-trend
       - cntk-lstm-forecast
