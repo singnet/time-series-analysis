@@ -194,7 +194,7 @@ jobs:
           domain: ${DOMAIN_CNTK_NEXT_DAY_TREND}
           ssh_user_env_var: ${SSH_USER}
           ssh_host_env_var: ${SSH_HOST}
-          daemon_pk: ${CNTK_NEXT_DAY_TREND_PK}
+          daemon_pk: ${PK_CNTK_NEXT_DAY_TREND}
           docker_nvidia: true
           docker_image_name: cntk_next_day_trend
           docker_container_name: CNTK_NEXT_DAY_TREND
@@ -219,7 +219,7 @@ jobs:
           domain: ${DOMAIN_CNTK_LSTM_FORECAST}
           ssh_user_env_var: ${SSH_USER}
           ssh_host_env_var: ${SSH_HOST}
-          daemon_pk: ${CNTK_LSTM_FORECAST_PK}
+          daemon_pk: ${PK_CNTK_LSTM_FORECAST}
           docker_nvidia: true
           docker_image_name: cntk_lstm_forecast
           docker_container_name: CNTK_LSTM_FORECAST
