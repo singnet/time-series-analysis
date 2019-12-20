@@ -11,6 +11,9 @@ commands:
       ssh_host_env_var:
         type: string
         default: ""
+      daemon_pk:
+        type: string
+        default: ""
       docker_nvidia:
         type: boolean
         default: false
@@ -116,6 +119,7 @@ commands:
             echo "============================================ Run Configs ============================================"
             export SSH_USER=<< parameters.ssh_user_env_var >>
             export SSH_HOST=<< parameters.ssh_host_env_var >>
+            export PVT_KEY_FOR_METERING=<< parameters.daemon_pk >>
             export DOCKER_NVIDIA=<< parameters.docker_nvidia >>
             export DOCKER_IMAGE_NAME=<< parameters.docker_image_name >>
             export DOCKER_CONTAINER_NAME=<< parameters.docker_container_name >>
@@ -190,6 +194,7 @@ jobs:
           domain: ${DOMAIN_CNTK_NEXT_DAY_TREND}
           ssh_user_env_var: ${SSH_USER}
           ssh_host_env_var: ${SSH_HOST}
+          daemon_pk: ${CNTK_NEXT_DAY_TREND_PK}
           docker_nvidia: true
           docker_image_name: cntk_next_day_trend
           docker_container_name: CNTK_NEXT_DAY_TREND
@@ -214,6 +219,7 @@ jobs:
           domain: ${DOMAIN_CNTK_LSTM_FORECAST}
           ssh_user_env_var: ${SSH_USER}
           ssh_host_env_var: ${SSH_HOST}
+          daemon_pk: ${CNTK_LSTM_FORECAST_PK}
           docker_nvidia: true
           docker_image_name: cntk_lstm_forecast
           docker_container_name: CNTK_LSTM_FORECAST
