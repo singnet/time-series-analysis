@@ -78,7 +78,7 @@ def start_service(cwd, service_module, run_daemon, run_ssl):
                 _network = "ropsten"
             snetd_configs["metering_end_point"] = "https://{}-marketplace.singularitynet.io/metering".format(_network)
             snetd_configs["free_call_signer_address"] = "0x3Bb9b2499c283cec176e7C707Ecb495B7a961ebf"
-            snetd_configs["pvt_key_for_metering"] = os.environ.get("PVT_KEY_FOR_METERING", "")
+            snetd_configs["pvt_key_for_metering"] = os.environ.get("CNTK_LSTM_FORECAST_PK", "")
         with open(conf, "w") as f:
             json.dump(snetd_configs, f, sort_keys=True, indent=4)
     
