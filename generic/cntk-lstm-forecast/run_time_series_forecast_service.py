@@ -17,16 +17,34 @@ log = logging.getLogger("run_time_series_forecast_service")
 
 def main():
     parser = argparse.ArgumentParser(description="Run services")
-    parser.add_argument("--no-daemon", action="store_false", dest="run_daemon", help="do not start the daemon")
-    parser.add_argument("--ssl", action="store_true", dest="run_ssl", help="start the daemon with SSL")
+    parser.add_argument("--no-daemon",
+                        action="store_false",
+                        dest="run_daemon",
+                        help="Do not start the daemon.")
+    parser.add_argument("--ssl",
+                        action="store_true",
+                        dest="run_ssl",
+                        help="Start the daemon with SSL.")
+    parser.add_argument("--metering",
+                        action="store_true",
+                        dest="run_metering",
+                        help="Start the daemon with Metering.")
+    parser.add_argument("--update",
+                        action="store_true",
+                        dest="run_up",
+                        help="Update the daemon before run.")
     args = parser.parse_args()
     root_path = pathlib.Path(__file__).absolute().parent
     
     # All services modules go here
-    service_modules = ["service.time_series_forecast_service"]
+    service_modules = ["service.next_day_trend_service"]
     
     # Call for all the services listed in service_modules
-    all_p = start_all_services(root_path, service_modules, args.run_daemon, args.run_ssl)
+    all_p = start_all_services(root_path,
+                               service_modules,
+                               args.run_daemon,
+                               args.run_ssl,
+                               args.run_metering)
     
     # Continuous checking all subprocess
     try:
