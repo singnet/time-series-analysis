@@ -37,7 +37,7 @@ def main():
     root_path = pathlib.Path(__file__).absolute().parent
     
     # All services modules go here
-    service_modules = ["service.next_day_trend_service"]
+    service_modules = ["service.time_series_forecast_service"]
     
     # Call for all the services listed in service_modules
     all_p = start_all_services(root_path,
