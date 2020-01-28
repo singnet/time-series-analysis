@@ -162,7 +162,8 @@ commands:
                   -v ~/${CERTS_DIR}:/opt/singnet/.certs \
                   $([ "${DOCKER_DEPLOY}" = "true" ] && echo "-v ~/${ETCD_HOST_DIR}:/${ETCD_CONTAINER_DIR}" || echo "") \
                   $([ "${DOCKER_MOUNT_VOLUMES}" = "true" ] && echo "-v ${DOCKER_MOUNT_SRC}:${DOCKER_MOUNT_DEST}" || echo "") \
-                  -tdi ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} ${SERVICE_RUN_COMMAND}
+                  -tdi ${DOCKER_IMAGE_NAME}:${CIRCLE_PROJECT_USERNAME} \
+                  bash -c "git fetch;git checkout ${CIRCLE_BRANCH};git pull;${SERVICE_RUN_COMMAND}"
             EOF
 
       - run:
@@ -176,7 +177,7 @@ commands:
             export DOCKER_DEPLOY=$([ "${CIRCLE_PROJECT_USERNAME}"/"${CIRCLE_BRANCH}" = "singnet/master" ] && echo "true" || echo "false")
             export PROD_TAG=$([ "${DOCKER_DEPLOY}" = "true" ] && echo "PROD_" || echo "")
             ssh -o "StrictHostKeyChecking no" ${SSH_USER}@${SSH_HOST} \<< EOF
-              docker exec -i ${PROD_TAG}${DOCKER_CONTAINER_NAME} ${SERVICE_TEST_COMMAND}
+              docker exec -i ${PROD_TAG}${DOCKER_CONTAINER_NAME} bash -c "${SERVICE_TEST_COMMAND}"
             EOF
 
 version: 2.1
@@ -189,8 +190,8 @@ jobs:
       SERVICE_NAME: cntk-next-day-trend
       SERVICE_DIR: finance/cntk-next-day-trend
       CERTS_DIR: singnet/.certs
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 run_next_day_trend_service.py --ssl --metering"
-      SERVICE_TEST_COMMAND: bash -c "sleep 10;source '/cntk/activate-cntk';git pull;python3 test_next_day_trend_service.py auto"
+      SERVICE_RUN_COMMAND: source '/cntk/activate-cntk';python3 run_next_day_trend_service.py --ssl --metering
+      SERVICE_TEST_COMMAND: sleep 20;source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto
       SNETD_PORT_MAINNET: 7001
       SNETD_PORT_ROPSTEN: 7051
     steps:
@@ -215,8 +216,8 @@ jobs:
       SERVICE_NAME: cntk-lstm-forecast
       SERVICE_DIR: generic/cntk-lstm-forecast
       CERTS_DIR: singnet/.certs
-      SERVICE_RUN_COMMAND: bash -c "source '/cntk/activate-cntk';git pull;python3 run_time_series_forecast_service.py --ssl --metering"
-      SERVICE_TEST_COMMAND: bash -c "sleep 10;source '/cntk/activate-cntk';git pull;python3 test_time_series_forecast_service.py auto"
+      SERVICE_RUN_COMMAND: source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl --metering
+      SERVICE_TEST_COMMAND: sleep 20;source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto
       SNETD_PORT_MAINNET: 7009
       SNETD_PORT_ROPSTEN: 7059
     steps:
