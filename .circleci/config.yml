@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  ssh-deployment: arturgontijo/ssh-deployment@1.1.0
+  ssh-deployment: singularitynet/ssh-deployment@1.0.0
 
 jobs:
   cntk-next-day-trend:
