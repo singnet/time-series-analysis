@@ -2,6 +2,8 @@ import sys
 import time
 import logging
 
+import multiprocessing
+
 import grpc
 import concurrent.futures as futures
 
@@ -18,6 +20,10 @@ log = logging.getLogger("time_series_forecast")
 GPU_DEVICE_BUSY = False
 GPU_QUEUE = []
 GPU_QUEUE_ID = -1
+
+
+def mp_forecast(obj, return_dict):
+    return_dict["response"] = obj.forecast()
 
 
 # Create a class to be added to the gRPC server
@@ -37,8 +43,6 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
         self.start_date = ""
         self.end_date = ""
 
-        self.response = ""
-
         log.debug("ForecastServicer created")
 
     # The method that will be exposed to the snet-cli call command.
@@ -55,11 +59,9 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
                     log.debug("[Client: {}] GPU is being used by [{}], waiting...".format(gpu_queue_id, GPU_QUEUE[0]))
                 count += 1
                 if count > 60 * 60:
-                    self.response = Output()
-                    self.response.last_sax_word = "GPU Busy"
-                    self.response.forecast_sax_letter = "GPU Busy"
-                    self.response.position_in_sax_interval = -1
-                    return self.response
+                    Output(last_sax_word="GPU Busy!",
+                           forecast_sax_letter="GPU Busy!",
+                           position_in_sax_interval=-1)
 
             # Lock GPU usage
             acquire_gpu(gpu_queue_id)
@@ -76,9 +78,6 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
             self.start_date = request.start_date
             self.end_date = request.end_date
 
-            # To respond we need to create a Output() object (from .proto file)
-            self.response = Output()
-
             fc = Forecast(self.window_len,
                           self.word_len,
                           self.alphabet_size,
@@ -88,22 +87,31 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
                           self.start_date,
                           self.end_date)
 
-            tmp_response = fc.forecast()
-            self.response.last_sax_word = tmp_response["last_sax_word"].encode("utf-8")
-            self.response.forecast_sax_letter = tmp_response["forecast_sax_letter"].encode("utf-8")
-            self.response.position_in_sax_interval = tmp_response["position_in_sax_interval"]
+            manager = multiprocessing.Manager()
+            return_dict = manager.dict()
+            p = multiprocessing.Process(target=mp_forecast, args=(fc, return_dict))
+            p.start()
+            p.join()
+
+            response = return_dict.get("response", None)
+            if not response:
+                return Output(last_sax_word="Fail",
+                              forecast_sax_letter="Fail",
+                              position_in_sax_interval=-1)
 
             log.debug("forecast({},{},{},{})={},{},{}".format(self.window_len,
                                                               self.word_len,
                                                               self.alphabet_size,
                                                               self.source_type,
-                                                              self.response.last_sax_word,
-                                                              self.response.forecast_sax_letter,
-                                                              self.response.position_in_sax_interval))
+                                                              response["last_sax_word"],
+                                                              response["forecast_sax_letter"],
+                                                              response["position_in_sax_interval"]))
 
             # Unlock GPU usage
             release_gpu(gpu_queue_id)
-            return self.response
+            return Output(last_sax_word=response["last_sax_word"],
+                          forecast_sax_letter=response["forecast_sax_letter"],
+                          position_in_sax_interval=response["position_in_sax_interval"])
 
         except Exception as e:
             log.error(e)
@@ -111,11 +119,9 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
                 release_gpu(gpu_queue_id)
             else:
                 remove_from_queue(gpu_queue_id)
-            self.response = Output()
-            self.response.last_sax_word = "Fail"
-            self.response.forecast_sax_letter = "Fail"
-            self.response.position_in_sax_interval = -1
-            return self.response
+            return Output(last_sax_word="Fail",
+                          forecast_sax_letter="Fail",
+                          position_in_sax_interval=-1)
 
 
 def get_gpu_queue_id():
@@ -155,7 +161,7 @@ def release_gpu(gpu_queue_id):
 #
 # Add all your classes to the server here.
 # (from generated .py files by protobuf compiler)
-def serve(max_workers=10, port=7777):
+def serve(max_workers=1, port=7777):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
     grpc_bt_grpc.add_ForecastServicer_to_server(ForecastServicer(), server)
     server.add_insecure_port("[::]:{}".format(port))
