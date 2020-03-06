@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  ssh-deployment: singularitynet/ssh-deployment@1.0.0
+  ssh-deployment: singularitynet/ssh-deployment@1.1.4
 
 jobs:
   cntk-next-day-trend:
@@ -12,8 +12,6 @@ jobs:
       - ssh-deployment/deploy:
           ssh-host: ${SSH_HOST}
           ssh-user: ${SSH_USER}
-          git-repo: "cntk-next-day-trend"
-          git-branch: "master"
           mainnet-port: "7001"
           testnet-port: "7051"
           run-command: "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py --ssl --metering"
@@ -23,9 +21,7 @@ jobs:
           docker-image: "cntk_next_day_trend"
           docker-container: "CNTK_NEXT_DAY_TREND"
           docker-nvidia: true
-          docker-volume: true
-          docker-vol-src: "singnet/.certs"
-          docker-vol-dst: "/opt/singnet/.certs"
+          docker-volumes: "-v ~/singnet/.certs:/opt/singnet/.certs"
           infura-api-key: ${INFURA_API_KEY}
           daemon-version: ${CI_SNETD_VERSION}
           daemon-pk: ${PK_CNTK_NEXT_DAY_TREND}
@@ -37,8 +33,6 @@ jobs:
       - ssh-deployment/deploy:
           ssh-host: ${SSH_HOST}
           ssh-user: ${SSH_USER}
-          git-repo: "cntk-lstm-forecast"
-          git-branch: "master"
           mainnet-port: "7009"
           testnet-port: "7059"
           run-command: "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl --metering"
@@ -48,9 +42,7 @@ jobs:
           docker-image: "cntk_lstm_forecast"
           docker-container: "CNTK_LSTM_FORECAST"
           docker-nvidia: true
-          docker-volume: true
-          docker-vol-src: "singnet/.certs"
-          docker-vol-dst: "/opt/singnet/.certs"
+          docker-volumes: "-v ~/singnet/.certs:/opt/singnet/.certs"
           infura-api-key: ${INFURA_API_KEY}
           daemon-version: ${CI_SNETD_VERSION}
           daemon-pk: ${PK_CNTK_LSTM_FORECAST}
