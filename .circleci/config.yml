@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  ssh-deployment: singularitynet/ssh-deployment@1.1.4
+  ssh-deployment: singularitynet/ssh-deployment@1.1.7
 
 jobs:
   cntk-next-day-trend:
@@ -12,10 +12,12 @@ jobs:
       - ssh-deployment/deploy:
           ssh-host: ${SSH_HOST}
           ssh-user: ${SSH_USER}
+          service-dir: "finance/cntk-next-day-trend"
           mainnet-port: "7001"
           testnet-port: "7051"
           run-command: "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py --ssl --metering"
           test-command: "sleep 20;source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
+          docker-test-files: "Dockerfile, requirements.txt"
           docker-file-path: "finance/cntk-next-day-trend/Dockerfile"
           docker-no-cache: true
           docker-image: "cntk_next_day_trend"
@@ -33,10 +35,12 @@ jobs:
       - ssh-deployment/deploy:
           ssh-host: ${SSH_HOST}
           ssh-user: ${SSH_USER}
+          service-dir: "generic/cntk-lstm-forecast"
           mainnet-port: "7009"
           testnet-port: "7059"
           run-command: "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl --metering"
           test-command: "sleep 20;source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
+          docker-test-files: "Dockerfile, requirements.txt"
           docker-file-path: "generic/cntk-lstm-forecast/Dockerfile"
           docker-no-cache: true
           docker-image: "cntk_lstm_forecast"
