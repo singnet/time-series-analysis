@@ -9,6 +9,8 @@ read -ra ARR <<< "$FILES_LIST"
 
 RET_VAL=0
 
+cd "$SERVICE_DIR" || exit
+
 for TARGET_FILE in "${ARR[@]}"
 do
   CURRENT_MD5=$(md5sum "${TARGET_FILE}")
