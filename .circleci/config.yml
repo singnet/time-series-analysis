@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  ssh-deployment: singularitynet/ssh-deployment@1.1.6
+  ssh-deployment: singularitynet/ssh-deployment@1.1.7
 
 jobs:
   cntk-next-day-trend:
@@ -35,7 +35,7 @@ jobs:
       - ssh-deployment/deploy:
           ssh-host: ${SSH_HOST}
           ssh-user: ${SSH_USER}
-          service-dir: "finance/cntk-lstm-forecast"
+          service-dir: "generic/cntk-lstm-forecast"
           mainnet-port: "7009"
           testnet-port: "7059"
           run-command: "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl --metering"
