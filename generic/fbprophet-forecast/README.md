@@ -6,7 +6,7 @@
 # Facebook Prophet Forecast
 
 This service uses [Prophet](https://github.com/facebook/prophet) 
-and [Statsmodel](https://github.com/statsmodels/statsmodels) to extrapolate a given time series.
+and [Statsmodel](https://github.com/statsmodels/statsmodels) to forecast points of a given time series.
 
 It is part of our [Time Series Analysis Services](https://github.com/singnet/time-series-analysis).
 
