@@ -1,0 +1,8 @@
+Cython
+git+git://github.com/statsmodels/statsmodels.git
+pystan==2.19.1.1
+fbprophet==0.6
+pandas==0.24.1
+pandas_datareader==0.7.0
+grpcio
+grpcio-tools

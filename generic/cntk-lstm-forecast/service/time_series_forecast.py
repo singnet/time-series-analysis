@@ -196,6 +196,12 @@ class Forecast:
             "forecast_sax_letter": "Fail",
             "position_in_sax_interval": -1
         }
+        
+        if not x or not y or not last_sax_word:
+            error_msg = "Error while preparing data!"
+            log.error(error_msg)
+            response["error"] = error_msg
+            return response
 
         # Trying to optimize settings for training.
         # Forbidding heavy training (max 100k input rows from CSV or Financial data)
@@ -206,7 +212,9 @@ class Forecast:
 
         epochs = 100
         if len(x["train"]) > 200000:
-            log.error("Configured data set too large (max: 200k): {}".format(len(x["train"])))
+            error_msg = "Configured data set too large (max: 200k): {}".format(len(x["train"]))
+            log.error(error_msg)
+            response["error"] = error_msg
             return response
         if len(x["train"]) < 100000:
             epochs = 250
@@ -262,5 +270,7 @@ class Forecast:
             response["forecast_sax_letter"] = forecast_sax_letter
             response["position_in_sax_interval"] = position_in_sax_interval
         else:
-            log.error("X and/or Y with no length: {} and {}".format(len(x), len(y)))
+            error_msg = "X and/or Y with no length: {} and {}".format(len(x), len(y))
+            log.error(error_msg)
+            response["error"] = error_msg
         return response

@@ -3,10 +3,10 @@
 
 ![singnetlogo](../../docs/assets/singnet-logo.jpg?raw=true 'SingularityNET')
 
-# CNTK Finance Time Series Analysis
+# Facebook Prophet Forecast
 
-This service uses [CNTK Finance Timeseries](https://cntk.ai/pythondocs/CNTK_104_Finance_Timeseries_Basic_with_Pandas_Numpy.html) 
-to predict whether or not, for an input date, market will be above or below the previous day.
+This service uses [Prophet](https://github.com/facebook/prophet) 
+and [Statsmodel](https://github.com/statsmodels/statsmodels) to extrapolate a given time series.
 
 It is part of our [Time Series Analysis Services](https://github.com/singnet/time-series-analysis).
 
@@ -23,7 +23,7 @@ Clone this repository:
 
 ```
 $ git clone https://github.com/singnet/time-series-analysis.git
-$ cd finance/cntk-next-day-trend
+$ cd generic/fbprophet-forecast
 ```
 
 ### Running the service:
@@ -54,12 +54,12 @@ For example (using the Ropsten testnet):
 ```
 $ cat snetd.config.json
 {
-   "DAEMON_END_POINT": "0.0.0.0:7051",
+   "DAEMON_END_POINT": "0.0.0.0:7042",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "BLOCKCHAIN_NETWORK_SELECTED": "ropsten",
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
    "ORGANIZATION_ID": "snet",
-   "SERVICE_ID": "cntk-next-day-trend",
+   "SERVICE_ID": "fbprophet-forecast",
    "LOG": {
        "LEVEL": "debug",
        "OUTPUT": {
@@ -87,27 +87,31 @@ $ python3 run_service.py
 ### Calling the service:
 
 Inputs:
-  - `source`: source to get market data (ie. yahoo, check this [link](https://github.com/pydata/pandas-datareader/blob/master/pandas_datareader/data.py#L306)).
-  - `contract`: label of asset (like "SPY", check this [link](https://finance.yahoo.com/most-active)).
-  - `start`: start date of training dataset (format "YYYY-MM-DD").
-  - `end`: end date of training dataset (format "YYYY-MM-DD").
-  - `target_date`: date that will be analysed (format "YYYY-MM-DD").
-  
-Note: The date delta must be >= 100 days.
+  - `url`: A CSV file URL (with `ds` and `y` headers).
+  - `ds`: the date series if no `url` (`max: 3000`).
+  - `y`: the data series if no `url`(`max: 3000`).
+  - `period`: the Season-Trend period (`optional`).
+  - `points`: Number of points to forecast (`max: 500`).
+
+Note: The length of `ds` and `y` must be the same and greater then 100.
 
 Local (testing purpose):
 
 ```
-$ python3 test_service.py 
+$ python3 test_service.py
 Endpoint (localhost:7003): 
-Method (trend): 
-Source(yahoo): 
-Contract(SPY): AMZN
-Start Date(2000-01-01): 2017-01-01
-End Date(2009-01-01): 2017-11-28
-Target Date(2018-11-12): 2018-11-28
-{'DOWN': 0.5}
+Method (forecast): 
+CSV (URL): http://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv
+Period (10): 
+Points (100): 365
+
+response:
+len(response.observed): 2905
+len(response.seasonal): 2905
+len(response.forecast): 365
 ```
+
+for further instructions about the output of this service, check the [User's Guide](../../docs/users_guide/generic/fbprophet-forecast.md).
 
 Through SingularityNET (follow this [link](https://dev.singularitynet.io/tutorials/publish/) 
 to learn how to publish a service and open a payment channel to be able to call it):
@@ -115,9 +119,15 @@ to learn how to publish a service and open a payment channel to be able to call 
 Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
-$ snet client call snet cntk-next-day-trend trend '{"source": "yahoo", "contract": "AAPL", "start": "2018-01-01", "end": "2018-10-31", "target_date": "2018-11-28"}'
-...
-response: "{'DOWN': 0.51}"
+$ snet client call fbprophet-forecast forecast '{"url": "http://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv"}'
+
+observed: [ ... ]
+trend: [ ... ]
+seasonal: [ ... ]
+forecast: [ ... ]
+forecast_ds: [ ... ]
+forecast_lower: [ ... ]
+forecast_upper: [ ... ]
 ```
 
 ## Contributing and Reporting Issues

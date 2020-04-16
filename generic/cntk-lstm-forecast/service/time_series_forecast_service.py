@@ -94,10 +94,12 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
             p.join()
 
             response = return_dict.get("response", None)
-            if not response:
-                return Output(last_sax_word="Fail",
-                              forecast_sax_letter="Fail",
-                              position_in_sax_interval=-1)
+            if not response or "error" in response:
+                error_msg = response.get("error", None) if response else None
+                log.error(error_msg)
+                context.set_details(error_msg)
+                context.set_code(grpc.StatusCode.INTERNAL)
+                return Output()
 
             log.debug("forecast({},{},{},{})={},{},{}".format(self.window_len,
                                                               self.word_len,

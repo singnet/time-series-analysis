@@ -37,7 +37,6 @@ Create the `SNET Daemon`'s config JSON file (`snetd.config.json`).
    "DAEMON_END_POINT": "DAEMON_HOST:DAEMON_PORT",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "BLOCKCHAIN_NETWORK_SELECTED": "BLOCKCHAIN_NETWORK",
-   "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://SERVICE_GRPC_HOST:SERVICE_GRPC_PORT",  
    "ORGANIZATION_ID": "ORGANIZATION_ID",
    "SERVICE_ID": "SERVICE_ID",
@@ -58,7 +57,6 @@ $ cat snetd.config.json
    "DAEMON_END_POINT": "0.0.0.0:7059",
    "IPFS_END_POINT": "http://ipfs.singularitynet.io:80",
    "BLOCKCHAIN_NETWORK_SELECTED": "ropsten",
-   "PASSTHROUGH_ENABLED": true,
    "PASSTHROUGH_ENDPOINT": "http://localhost:7003",
    "ORGANIZATION_ID": "snet",
    "SERVICE_ID": "cntk-lstm-forecast",
@@ -83,7 +81,7 @@ $ sh buildproto.sh
 ```
 Start the service and `SNET Daemon`:
 ```
-$ python3 run_time_series_forecast_service.py
+$ python3 run_service.py
 ```
 
 ### Calling the service:
@@ -114,7 +112,7 @@ Note: The date delta must be >= `window_len`.
 Local (testing purpose):
 
 ```
-$ python3 test_time_series_forecast_service.py
+$ python3 test_service.py
 Endpoint (localhost:7003): 
 Method (forecast): 
 Window length (24): 
@@ -147,7 +145,7 @@ Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
 $ snet client call cntk-lstm-forecast forecast '{"window_len": 36, "word_len": 18, "alphabet_size": 5, "source_type": "financial", "source": "yahoo", "contract": "AAPL", "start_date": "2017-01-01", "end_date": "2018-12-10"}'
-unspent_amount_in_cogs before call (None means that we cannot get it now):1
+
 last_sax_word: "eeeeeedddcbbaaaaaa"
 forecast_sax_letter: "c"
 position_in_sax_interval: 0.2819729149341583

@@ -80,7 +80,7 @@ class NextDayTrend:
                 close_tag = "close"
                 volume_tag = "volume"
             else:
-                return "Error: Couldn't find Close|Volume data."
+                return {"error": "Couldn't find Close|Volume data."}
 
             # Compute price difference as a feature
             asset_data["diff"] = np.abs(
@@ -196,9 +196,9 @@ class NextDayTrend:
                 k = "DOWN"
                 v = round(prob_down, 2)
 
-            return "{}: {}".format(k, v)
+            return {"trend": "{}".format(k, v)}
 
         except Exception as e:
             traceback.print_exc()
             log.error(e)
-            return "Error: Please, check our User's Guide."
+            return {"error": "Error: {}. Please, check our User's Guide.".format(e)}
