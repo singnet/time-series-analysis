@@ -1,5 +1,5 @@
 statsmodels==0.11.1
-pystan==2.19.1.1
+pystan
 fbprophet==0.6
 numpy
 pandas==0.24.1
