@@ -7,7 +7,6 @@ import multiprocessing
 import logging
 
 from service import common
-from service.fbprophet_forecast import FBProphetForecast
 
 # Importing the generated codes from buildproto.sh
 from service.service_spec import fbprophet_forecast_pb2_grpc as grpc_bt_grpc
@@ -17,7 +16,9 @@ logging.basicConfig(level=10, format="%(asctime)s - [%(levelname)8s] - %(name)s 
 log = logging.getLogger("fbprophet_forecast")
 
 
-def mp_forecast(obj, request, return_dict):
+def mp_forecast(request, return_dict):
+    from service.fbprophet_forecast import FBProphetForecast
+    obj = FBProphetForecast()
     return_dict["response"] = obj.run(request.url,
                                       request.ds,
                                       request.y,
@@ -39,10 +40,7 @@ class ForecastServicer(grpc_bt_grpc.ForecastServicer):
         manager = multiprocessing.Manager()
         return_dict = manager.dict()
     
-        p = multiprocessing.Process(target=mp_forecast,
-                                    args=(FBProphetForecast(Output),
-                                          request,
-                                          return_dict))
+        p = multiprocessing.Process(target=mp_forecast, args=(request, return_dict))
         p.start()
         p.join()
 

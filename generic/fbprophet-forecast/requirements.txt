@@ -1,8 +1,9 @@
-Cython
 git+git://github.com/statsmodels/statsmodels.git
 pystan==2.19.1.1
 fbprophet==0.6
+numpy
 pandas==0.24.1
 pandas_datareader==0.7.0
+pandas_market_calendars==1.2
 grpcio
 grpcio-tools

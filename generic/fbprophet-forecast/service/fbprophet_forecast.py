@@ -62,6 +62,7 @@ class FBProphetForecast:
                 temp.write(csv_data)
                 temp.seek(0)
                 return pd.read_csv(temp.name)
+        return pd.DataFrame()
 
     def run(self, url, ds, y, period, points):
         response = dict()
@@ -74,7 +75,7 @@ class FBProphetForecast:
         
         if url:
             df = self.process_csv_url(url)
-            if not df["ds"] or not df["y"]:
+            if "ds" not in df or "y" not in df:
                 error_msg = "Error while processing CSV from URL!"
                 response["error"] = error_msg
                 log.error(error_msg)

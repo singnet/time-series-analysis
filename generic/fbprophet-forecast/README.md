@@ -108,7 +108,7 @@ Points (100): 365
 response:
 len(response.observed): 2905
 len(response.seasonal): 2905
-len(response.forecast): 365
+len(response.forecast): 3270
 ```
 
 for further instructions about the output of this service, check the [User's Guide](../../docs/users_guide/generic/fbprophet-forecast.md).
