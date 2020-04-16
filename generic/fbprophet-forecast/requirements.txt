@@ -1,4 +1,3 @@
-Cython
 pystan==2.19.1.1
 fbprophet==0.6
 numpy
@@ -7,4 +6,5 @@ pandas_datareader==0.7.0
 pandas_market_calendars==1.2
 grpcio
 grpcio-tools
+# Cython (from Dockerfile)
 git+git://github.com/statsmodels/statsmodels.git
