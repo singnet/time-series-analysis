@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  ssh-deployment: singularitynet/ssh-deployment@2.3.0
+  ssh-deployment: singularitynet/ssh-deployment@2.4.1
 
 jobs:
   cntk-next-day-trend:
@@ -15,7 +15,7 @@ jobs:
           service-dir: "finance/cntk-next-day-trend"
           mainnet-port: "7001"
           testnet-port: "7051"
-          run-command: "source '/cntk/activate-cntk';python3 run_next_day_trend_service.py --ssl --metering"
+          run-command: "source '/cntk/activate-cntk';python3 run_service.py --ssl --metering"
           docker-test-files: "Dockerfile, requirements.txt"
           docker-file-path: "finance/cntk-next-day-trend/Dockerfile"
           docker-no-cache: true
@@ -23,7 +23,6 @@ jobs:
           docker-container: "CNTK_NEXT_DAY_TREND"
           docker-nvidia: true
           docker-volumes: "-v ~/singnet/.certs:/opt/singnet/.certs"
-          infura-api-key: ${INFURA_API_KEY}
           daemon-version: ${CI_SNETD_VERSION}
           daemon-pk: ${PK_CNTK_NEXT_DAY_TREND}
   cntk-lstm-forecast:
@@ -37,7 +36,7 @@ jobs:
           service-dir: "generic/cntk-lstm-forecast"
           mainnet-port: "7009"
           testnet-port: "7059"
-          run-command: "source '/cntk/activate-cntk';python3 run_time_series_forecast_service.py --ssl --metering"
+          run-command: "source '/cntk/activate-cntk';python3 run_service.py --ssl --metering"
           docker-test-files: "Dockerfile, requirements.txt"
           docker-file-path: "generic/cntk-lstm-forecast/Dockerfile"
           docker-no-cache: true
@@ -45,9 +44,29 @@ jobs:
           docker-container: "CNTK_LSTM_FORECAST"
           docker-nvidia: true
           docker-volumes: "-v ~/singnet/.certs:/opt/singnet/.certs"
-          infura-api-key: ${INFURA_API_KEY}
           daemon-version: ${CI_SNETD_VERSION}
           daemon-pk: ${PK_CNTK_LSTM_FORECAST}
+  fbprophet-forecast:
+    docker:
+      - image: circleci/python:3.6.6-node
+    steps:
+      - checkout
+      - ssh-deployment/deploy:
+          ssh-host: ${SSH_HOST}
+          ssh-user: ${SSH_USER}
+          service-dir: "generic/fbprophet-forecast"
+          mainnet-port: "7041"
+          testnet-port: "7042"
+          run-command: "python3 run_service.py --ssl --metering"
+          docker-test-files: "Dockerfile, requirements.txt"
+          docker-file-path: "generic/fbprophet-forecast/Dockerfile"
+          docker-no-cache: true
+          docker-image: "fbprophet_forecast"
+          docker-container: "FBPROPHET_FORECAST"
+          docker-nvidia: true
+          docker-volumes: "-v ~/singnet/.certs:/opt/singnet/.certs"
+          daemon-version: ${CI_SNETD_VERSION}
+          daemon-pk: ${PK_FBPROPHET_FORECAST}
 
   testing:
     docker:
@@ -56,20 +75,27 @@ jobs:
         - ssh-deployment/test:
               ssh-host: ${SSH_HOST}
               ssh-user: ${SSH_USER}
-              test-command: "sleep 20;source '/cntk/activate-cntk';python3 test_next_day_trend_service.py auto"
+              test-command: "sleep 20;source '/cntk/activate-cntk';python3 test_service.py auto"
               docker-container: "CNTK_NEXT_DAY_TREND"
         - ssh-deployment/test:
               ssh-host: ${SSH_HOST}
               ssh-user: ${SSH_USER}
-              test-command: "sleep 20;source '/cntk/activate-cntk';python3 test_time_series_forecast_service.py auto"
+              test-command: "sleep 20;source '/cntk/activate-cntk';python3 test_service.py auto"
               docker-container: "CNTK_LSTM_FORECAST"
+        - ssh-deployment/test:
+            ssh-host: ${SSH_HOST}
+            ssh-user: ${SSH_USER}
+            test-command: "sleep 20;python3 test_service.py auto"
+            docker-container: "FBPROPHET_FORECAST"
 
 workflows:
   build_deploy_ts_services:
     jobs:
       - cntk-next-day-trend
       - cntk-lstm-forecast
+      - fbprophet-forecast
       - testing:
             requires:
               - cntk-next-day-trend
               - cntk-lstm-forecast
+              - fbprophet-forecast

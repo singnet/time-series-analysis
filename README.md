@@ -15,15 +15,19 @@ A collection of services for time series analysis.
 
 For more details on how to publish and test a service, select it from the list below:
 
+### Finance:
+- [cntk-next-day-trend](finance/cntk-next-day-trend) ([User's Guide](docs/users_guide/finance/cntk-next-day-trend.md)) - 
+This service uses a CNTK MLP to predict whether or not, for an input date, market will be above or below the previous day.
+[[Reference](https://cntk.ai/pythondocs/CNTK_104_Finance_Timeseries_Basic_with_Pandas_Numpy.html)]
+
 ### Generic:
 - [cntk-lstm-forecast](generic/cntk-lstm-forecast) ([User's Guide](docs/users_guide/generic/cntk-lstm-forecast.md)) - 
 This service uses a CNTK LSTM model and [Python SAX](https://github.com/seninp/saxpy) to extrapolate a given time series.
 [[Reference](https://cntk.ai/pythondocs/CNTK_106B_LSTM_Timeseries_with_IOT_Data.html)]
 
-### Finance:
-- [cntk-next-day-trend](finance/cntk-next-day-trend) ([User's Guide](docs/users_guide/finance/cntk-next-day-trend.md)) - 
-This service uses a CNTK MLP to predict whether or not, for an input date, market will be above or below the previous day.
-[[Reference](https://cntk.ai/pythondocs/CNTK_104_Finance_Timeseries_Basic_with_Pandas_Numpy.html)]
+- [fbprophet-forecast](generic/fbprophet-forecast) ([User's Guide](docs/users_guide/generic/fbprophet-forecast.md)) - 
+This service uses Facebook's Prophet and [Statsmodel](https://github.com/statsmodels/statsmodels) 
+to forecast points of a given time series. [[Reference](https://github.com/facebook/prophet)]
 
 ## Contributing and Reporting Issues
 

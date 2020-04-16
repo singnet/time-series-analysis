@@ -35,7 +35,7 @@ class NextDayTrendServicer(grpc_bt_grpc.NextDayTrendServicer):
     # The method that will be exposed to the snet-cli call command.
     # request: incoming data
     # context: object that provides RPC-specific information (timeout, etc).
-    def trend(self, request, _):
+    def trend(self, request, context):
         # In our case, request is a Input() object (from .proto file)
         self.source = request.source
         self.contract = request.contract
@@ -56,16 +56,20 @@ class NextDayTrendServicer(grpc_bt_grpc.NextDayTrendServicer):
         p.join()
 
         response = return_dict.get("response", None)
-        if not response:
-            return Output(response="Fail")
+        if not response or "error" in response:
+            error_msg = response.get("error", None) if response else None
+            log.error(error_msg)
+            context.set_details(error_msg)
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return Output()
 
         log.info("asset_trend({},{},{},{},{})={}".format(self.source,
                                                          self.contract,
                                                          self.start,
                                                          self.end,
                                                          self.target_date,
-                                                         response))
-        return Output(response=response)
+                                                         response["trend"]))
+        return Output(response=response["trend"])
 
 
 # The gRPC serve function.

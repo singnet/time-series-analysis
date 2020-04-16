@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/cntk/release:2.7-gpu-python3.5-cuda10.0-cudnn7.3
+FROM ubuntu:18.04
 
 ARG git_owner="singnet"
 ARG git_repo="time-series-analysis"
@@ -6,8 +6,8 @@ ARG git_branch="master"
 ARG snetd_version
 
 ENV SINGNET_REPOS=/opt/singnet
-ENV FINANCE_FOLDER=${SINGNET_REPOS}/${git_repo}/finance
-ENV SERVICE_NAME=cntk-next-day-trend
+ENV GENERIC_FOLDER=${SINGNET_REPOS}/${git_repo}/generic
+ENV SERVICE_NAME=fbprophet-forecast
 
 RUN mkdir -p ${SINGNET_REPOS}
 
@@ -15,6 +15,10 @@ RUN apt-get update && \
     apt-get install -y apt-utils
 
 RUN apt-get install -y \
+    build-essential \
+    python3 \
+    python3-pip \
+    python3-dev \
     curl \
     git \
     wget \
@@ -31,9 +35,9 @@ RUN SNETD_GIT_VERSION=`curl -s https://api.github.com/repos/singnet/snet-daemon/
 RUN cd ${SINGNET_REPOS} && \
     git clone -b ${git_branch} https://github.com/${git_owner}/${git_repo}.git
 
-RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
-    /root/anaconda3/envs/cntk-py35/bin/python -m pip install -U pip && \
-    /root/anaconda3/envs/cntk-py35/bin/python -m pip install -r requirements.txt && \
+RUN cd ${GENERIC_FOLDER}/${SERVICE_NAME} && \
+    pip3 install --upgrade pip && \
+    pip3 install -r requirements.txt && \
     sh buildproto.sh
 
-WORKDIR ${FINANCE_FOLDER}/${SERVICE_NAME}
+WORKDIR ${GENERIC_FOLDER}/${SERVICE_NAME}
