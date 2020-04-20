@@ -74,3 +74,28 @@ forecast_ds: [ ... ]
 forecast_lower: [ ... ]
 forecast_upper: [ ... ]
 ```
+
+Using dApp, user should receive a chart and a link to download the CSV data:
+
+![Peyton Wikipedia](../../assets/users_guide/chart_fbprophet_peyton.png)
+
+Input:
+
+  - `url`: http://bh.singularitynet.io:7000/Resources/example_albury_min_temps.csv
+  - `points`: 365
+
+Response:
+
+```
+observed: [ ... ]
+trend: [ ... ]
+seasonal: [ ... ]
+forecast: [ ... ]
+forecast_ds: [ ... ]
+forecast_lower: [ ... ]
+forecast_upper: [ ... ]
+```
+
+Using dApp, user should receive a chart and a link to download the CSV data:
+
+![Peyton Wikipedia](../../assets/users_guide/chart_fbprophet_albury.png)
