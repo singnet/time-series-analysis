@@ -128,13 +128,13 @@ class FBProphetForecast:
                 forecast_df.append(ts.strftime('%Y-%m-%d'))
     
             return {
-                "observed": stl.observed,
-                "trend": stl.trend,
-                "seasonal": stl.seasonal,
-                "forecast": forecast["yhat"].values,
-                "forecast_ds": forecast_df,
-                "forecast_lower": forecast["yhat_lower"].values,
-                "forecast_upper": forecast["yhat_upper"].values
+                "observed": list(stl.observed),
+                "trend": list(stl.trend),
+                "seasonal": list(stl.seasonal),
+                "forecast": list(forecast["yhat"].values),
+                "forecast_ds": list(forecast_df),
+                "forecast_lower": list(forecast["yhat_lower"].values),
+                "forecast_upper": list(forecast["yhat_upper"].values)
             }
 
         except Exception as e:
