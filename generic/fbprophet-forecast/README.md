@@ -101,7 +101,7 @@ Local (testing purpose):
 $ python3 test_service.py
 Endpoint (localhost:7003): 
 Method (forecast): 
-CSV (URL): http://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv
+CSV (URL): https://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv
 Period (10): 
 Points (100): 365
 
@@ -119,7 +119,7 @@ to learn how to publish a service and open a payment channel to be able to call 
 Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
-$ snet client call fbprophet-forecast forecast '{"url": "http://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv"}'
+$ snet client call fbprophet-forecast forecast '{"url": "https://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv"}'
 
 observed: [ ... ]
 trend: [ ... ]
