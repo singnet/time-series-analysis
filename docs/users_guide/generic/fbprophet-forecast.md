@@ -43,7 +43,7 @@ You can also call the service from SingularityNET CLI (`snet`).
 Assuming that you have an open channel (`id: 0`) to this service:
 
 ```
-$ snet client call fbprophet-forecast forecast '{"url": "http://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv"}'
+$ snet client call fbprophet-forecast forecast '{"url": "https://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv"}'
 
 observed: [ ... ]
 trend: [ ... ]
@@ -60,7 +60,7 @@ The output format is data arrays that users can analyse.
 
 Input:
 
-  - `url`: http://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv
+  - `url`: https://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv
   - `points`: 365
 
 Response:
@@ -81,7 +81,7 @@ Using dApp, user should receive a chart and a link to download the CSV data:
 
 Input:
 
-  - `url`: http://bh.singularitynet.io:7000/Resources/example_albury_min_temps.csv
+  - `url`: https://bh.singularitynet.io:7000/Resources/example_albury_min_temps.csv
   - `points`: 365
 
 Response:

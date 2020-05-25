@@ -8,7 +8,7 @@ import service.service_spec.fbprophet_forecast_pb2 as grpc_bt_pb2
 from service import registry
 
 
-TEST_URL = "http://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv"
+TEST_URL = "https://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv"
 
 if __name__ == "__main__":
 
