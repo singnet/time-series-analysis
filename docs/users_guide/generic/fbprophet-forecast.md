@@ -60,7 +60,7 @@ The output format is data arrays that users can analyse.
 
 Input:
 
-  - `url`: https://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv
+  - `url`: `https://bh.singularitynet.io:7000/Resources/example_wp_log_peyton_manning.csv`
   - `points`: 365
 
 Response:
@@ -81,7 +81,7 @@ Using dApp, user should receive a chart and a link to download the CSV data:
 
 Input:
 
-  - `url`: https://bh.singularitynet.io:7000/Resources/example_albury_min_temps.csv
+  - `url`: `https://bh.singularitynet.io:7000/Resources/example_albury_min_temps.csv`
   - `points`: 365
 
 Response:
