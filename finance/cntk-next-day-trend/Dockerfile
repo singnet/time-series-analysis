@@ -32,7 +32,7 @@ RUN cd ${SINGNET_REPOS} && \
     git clone -b ${git_branch} https://github.com/${git_owner}/${git_repo}.git
 
 RUN cd ${FINANCE_FOLDER}/${SERVICE_NAME} && \
-    /root/anaconda3/envs/cntk-py35/bin/python -m pip install -U pip && \
+    /root/anaconda3/envs/cntk-py35/bin/python -m pip install -U pip==20.2.4 && \
     /root/anaconda3/envs/cntk-py35/bin/python -m pip install -r requirements.txt && \
     sh buildproto.sh
 

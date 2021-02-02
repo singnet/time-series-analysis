@@ -87,22 +87,24 @@ def start_service(cwd, service_module, run_daemon, run_ssl, run_metering):
     def add_extra_configs(conf):
         """Add Extra keys to snetd.config.json"""
         with open(conf, "r") as f:
-            _network = "mainnet"
-            if "ropsten" in conf:
-                _network = "ropsten"
             snetd_configs = json.load(f)
             if run_ssl:
                 snetd_configs["ssl_cert"] = "/opt/singnet/.certs/fullchain.pem"
                 snetd_configs["ssl_key"] = "/opt/singnet/.certs/privkey.pem"
-            if run_metering:
                 snetd_configs["payment_channel_ca_path"] = "/opt/singnet/.certs/ca.pem"
                 snetd_configs["payment_channel_cert_path"] = "/opt/singnet/.certs/client.pem"
                 snetd_configs["payment_channel_key_path"] = "/opt/singnet/.certs/client-key.pem"
-                snetd_configs["metering_end_point"] = "https://{}-marketplace.singularitynet.io".format(_network)
-                snetd_configs["pvt_key_for_metering"] = os.environ.get("PVT_KEY_FOR_METERING", "")
+            _network = "mainnet"
+            if "ropsten" in conf:
+                _network = "ropsten"
             infura_key = os.environ.get("INFURA_API_KEY", "")
             if infura_key:
                 snetd_configs["ethereum_json_rpc_endpoint"] = "https://{}.infura.io/{}".format(_network, infura_key)
+            pk_metering = os.environ.get("PVT_KEY_FOR_METERING", "")
+            if pk_metering:
+                snetd_configs["metering_enabled"] = True
+                snetd_configs["metering_end_point"] = "https://{}-marketplace.singularitynet.io".format(_network)
+                snetd_configs["pvt_key_for_metering"] = pk_metering
         with open(conf, "w") as f:
             json.dump(snetd_configs, f, sort_keys=True, indent=4)
 
