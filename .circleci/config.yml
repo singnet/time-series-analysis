@@ -14,7 +14,7 @@ jobs:
           ssh-user: ${SSH_USER}
           service-dir: "finance/cntk-next-day-trend"
           mainnet-port: "7018"
-          testnet-port: "8051"
+          testnet-port: "7051"
           run-command: "source '/cntk/activate-cntk';python3 run_service.py --ssl --metering"
           docker-test-files: "Dockerfile, requirements.txt"
           docker-file-path: "finance/cntk-next-day-trend/Dockerfile"
@@ -35,7 +35,7 @@ jobs:
           ssh-user: ${SSH_USER}
           service-dir: "generic/cntk-lstm-forecast"
           mainnet-port: "7017"
-          testnet-port: "8059"
+          testnet-port: "7059"
           run-command: "source '/cntk/activate-cntk';python3 run_service.py --ssl --metering"
           docker-test-files: "Dockerfile, requirements.txt"
           docker-file-path: "generic/cntk-lstm-forecast/Dockerfile"
@@ -56,7 +56,7 @@ jobs:
           ssh-user: ${SSH_USER}
           service-dir: "generic/fbprophet-forecast"
           mainnet-port: "7038"
-          testnet-port: "8042"
+          testnet-port: "7042"
           run-command: "python3 run_service.py --ssl --metering"
           docker-test-files: "Dockerfile, requirements.txt"
           docker-file-path: "generic/fbprophet-forecast/Dockerfile"
