@@ -4,10 +4,9 @@ import logging
 import datetime
 import numpy as np
 import pandas as pd
-# pip install git+https://github.com/pydata/pandas-datareader.git
-from pandas_datareader import data
 import time
 import traceback
+import yfinance
 
 
 logging.basicConfig(level=10, format="%(asctime)s - [%(levelname)8s] - %(name)s - %(message)s")
@@ -58,7 +57,7 @@ class NextDayTrend:
         while retry_cnt < max_num_retry:
             try:
                 end = datetime.datetime.now()
-                return data.DataReader(self.contract, self.source, "2000-01-01", end.date())
+                return yfinance.download(tickers=[self.contract], start="2000-01-01", end=end.date())
             except:
                 retry_cnt += 1
                 time.sleep(np.random.randint(1, 10))

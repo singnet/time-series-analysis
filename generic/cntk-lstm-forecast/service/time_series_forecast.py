@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import numpy as np
 import time
-from pandas_datareader import data as pd_data
+import yfinance
 
 from saxpy.sax import sax_via_window
 
@@ -65,7 +65,7 @@ class Forecast:
         retry_cnt, max_num_retry = 0, 3
         while retry_cnt < max_num_retry:
             try:
-                return pd_data.DataReader(self.contract, self.source, self.start_date, self.end_date)
+                return yfinance.download(tickers=[self.contract], start=self.start_date, end=self.end_date)
             except Exception as e:
                 log.error(e)
                 retry_cnt += 1
