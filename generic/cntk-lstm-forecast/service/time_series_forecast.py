@@ -65,9 +65,7 @@ class Forecast:
         retry_cnt, max_num_retry = 0, 3
         while retry_cnt < max_num_retry:
             try:
-                df = yfinance.download(tickers=[self.contract], start=self.start_date, end=self.end_date)
-                df.reset_index(inplace=True, drop=False)
-                return df
+                return yfinance.download(tickers=[self.contract], start=self.start_date, end=self.end_date)
             except Exception as e:
                 log.error(e)
                 retry_cnt += 1

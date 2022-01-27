@@ -57,9 +57,7 @@ class NextDayTrend:
         while retry_cnt < max_num_retry:
             try:
                 end = datetime.datetime.now()
-                df = yfinance.download(tickers=[self.contract], start="2000-01-01", end=end.date())
-                df.reset_index(inplace=True, drop=False)
-                return df
+                return yfinance.download(tickers=[self.contract], start="2000-01-01", end=end.date())
             except:
                 retry_cnt += 1
                 time.sleep(np.random.randint(1, 10))
