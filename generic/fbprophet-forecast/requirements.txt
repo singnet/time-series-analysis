@@ -2,8 +2,8 @@ statsmodels==0.11.1
 pystan
 fbprophet==0.6
 numpy
-pandas==0.24.1
-pandas_datareader==0.7.0
+pandas==1.4.0
+yfinance==0.1.63
 pandas_market_calendars==1.2
 grpcio
 grpcio-tools

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from pandas_datareader import data as pd_data
 import pandas_market_calendars as mcal
+import yfinance
 
 from fbprophet import Prophet
 from statsmodels.tsa.seasonal import STL
@@ -28,7 +28,9 @@ class FBProphetForecast:
         retry_cnt, max_num_retry = 0, 3
         while retry_cnt < max_num_retry:
             try:
-                return pd_data.DataReader(ticker, "yahoo", start_date, end_date)
+                df = yfinance.download(tickers=[ticker], start=start_date, end=end_date)
+                df.reset_index(inplace=True, drop=False)
+                return df
             except Exception as e:
                 log.warning(e)
                 retry_cnt += 1
