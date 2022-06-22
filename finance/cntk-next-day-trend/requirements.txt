@@ -1,6 +1,6 @@
 grpcio==1.38.0
 grpcio-tools==1.38.0
 cntk-gpu==2.7
-numpy==1.17.4
+numpy==1.22.0
 pandas==0.24.1
 yfinance==0.1.63
