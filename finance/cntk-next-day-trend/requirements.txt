@@ -1,4 +1,4 @@
-grpcio==1.38.0
+grpcio==1.53.0
 grpcio-tools==1.38.0
 cntk-gpu==2.7
 numpy==1.17.4
